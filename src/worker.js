@@ -51,9 +51,17 @@ async function handleApiRequest(request, env, ctx, url) {
   });
 
   if (env.APPS_SCRIPT_WEB_APP_URL) {
+    const requireAppsScriptProxy = isTruthy(env.REQUIRE_APPS_SCRIPT_PROXY);
     const proxyPayload = await proxyToAppsScript(route.fn, paramObject, env);
     if (proxyPayload && proxyPayload.success === true) {
       return toJsonResponse(proxyPayload, 200);
+    }
+
+    if (requireAppsScriptProxy) {
+      return toJsonResponse(
+        proxyPayload || createJsonResponse(false, 'Gagal sinkron ke Apps Script.', null),
+        502
+      );
     }
   }
 
@@ -67,6 +75,15 @@ async function handleApiRequest(request, env, ctx, url) {
   const payload = await handler(...paramValues);
 
   return toJsonResponse(payload, 200);
+}
+
+function isTruthy(value) {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value === 1;
+  if (typeof value !== 'string') return false;
+
+  const normalized = value.trim().toLowerCase();
+  return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on';
 }
 
 async function proxyToAppsScript(action, params, env) {

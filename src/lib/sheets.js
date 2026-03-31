@@ -12,13 +12,18 @@ export async function getSheetDataAsObjects(env, ctx, sheetName) {
     env.GSHEETS_API_KEY ||
     env.GOOGLE_SHEETS_KEY ||
     '';
+  const allowSeedFallback = isTruthy(env.ALLOW_SEED_FALLBACK);
 
   if (!spreadsheetId) {
     throw new Error('Environment variable SPREADSHEET_ID belum diatur.');
   }
 
   if (!apiKey) {
-    return getSeedRowsBySheetName(sheetName);
+    if (allowSeedFallback) {
+      return getSeedRowsBySheetName(sheetName);
+    }
+
+    throw new Error('GOOGLE_SHEETS_API_KEY belum diatur dan ALLOW_SEED_FALLBACK=false.');
   }
 
   const ttl = Number(env.SHEETS_CACHE_TTL || 300);
@@ -39,9 +44,23 @@ export async function getSheetDataAsObjects(env, ctx, sheetName) {
     }
   });
 
-  const payload = await response.json();
+  const rawText = await response.text();
+  let payload = {};
+
+  try {
+    payload = rawText ? JSON.parse(rawText) : {};
+  } catch (_error) {
+    payload = {};
+  }
+
   if (!response.ok) {
-    return getSeedRowsBySheetName(sheetName);
+    if (allowSeedFallback) {
+      return getSeedRowsBySheetName(sheetName);
+    }
+
+    const errorMessage =
+      (payload && payload.error && payload.error.message) || `Google Sheets API gagal dengan status ${response.status}.`;
+    throw new Error(errorMessage);
   }
 
   const values = payload.values || [];
@@ -62,6 +81,15 @@ export async function getSheetDataAsObjects(env, ctx, sheetName) {
 
   await cacheRows(ctx, cacheKey, rows, ttl);
   return rows;
+}
+
+function isTruthy(value) {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value === 1;
+  if (typeof value !== 'string') return false;
+
+  const normalized = value.trim().toLowerCase();
+  return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on';
 }
 
 async function cacheRows(ctx, cacheKey, rows, ttl) {
