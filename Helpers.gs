@@ -8,7 +8,8 @@ var SHEET_NAMES = {
   DAILY_PRAYERS: 'daily_prayers',
   DZIKIR: 'dzikir',
   QURAN_SURAHS: 'quran_surahs',
-  QURAN_VERSES: 'quran_verses'
+  QURAN_VERSES: 'quran_verses',
+  LEARNING_PROGRESS: 'learning_progress'
 };
 
 /**
@@ -70,6 +71,70 @@ function getSheetDataAsObjects_(sheetName) {
     });
     return obj;
   });
+}
+
+/**
+ * Ensure a sheet exists and has at least the required headers.
+ */
+function getOrCreateSheet_(sheetName, requiredHeaders) {
+  var spreadsheet = getSpreadsheetByConfig_();
+  var sheet = spreadsheet.getSheetByName(sheetName);
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(sheetName);
+  }
+
+  ensureSheetHeaders_(sheet, requiredHeaders || []);
+  return sheet;
+}
+
+/**
+ * Add missing headers to first row while preserving existing columns.
+ */
+function ensureSheetHeaders_(sheet, requiredHeaders) {
+  if (!requiredHeaders || !requiredHeaders.length) {
+    return;
+  }
+
+  var lastColumn = sheet.getLastColumn();
+  var currentHeaders = [];
+
+  if (lastColumn > 0) {
+    currentHeaders = sheet.getRange(1, 1, 1, lastColumn).getValues()[0].map(function(value) {
+      return String(value || '').trim();
+    });
+  }
+
+  if (!currentHeaders.length || currentHeaders.every(function(header) { return !header; })) {
+    sheet.getRange(1, 1, 1, requiredHeaders.length).setValues([requiredHeaders]);
+    return;
+  }
+
+  var missingHeaders = requiredHeaders.filter(function(requiredHeader) {
+    return currentHeaders.indexOf(requiredHeader) === -1;
+  });
+
+  if (!missingHeaders.length) {
+    return;
+  }
+
+  sheet.getRange(1, currentHeaders.length + 1, 1, missingHeaders.length).setValues([missingHeaders]);
+}
+
+/**
+ * Build map {headerName: columnIndex} from first row (0-based index).
+ */
+function getHeaderIndexMap_(headers) {
+  var map = {};
+
+  headers.forEach(function(header, index) {
+    var normalized = String(header || '').trim();
+    if (normalized) {
+      map[normalized] = index;
+    }
+  });
+
+  return map;
 }
 
 /**
