@@ -48,8 +48,7 @@ async function handleApiRequest(request, env, ctx, url) {
   const params = route.params.map((name) => url.searchParams.get(name) || '');
   const payload = await handler(...params);
 
-  const status = payload.success ? 200 : 400;
-  return toJsonResponse(payload, status);
+  return toJsonResponse(payload, 200);
 }
 
 async function serveStaticAsset(request, env) {

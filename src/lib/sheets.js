@@ -3,15 +3,22 @@
  * Uses Workers Cache API to reduce repeated upstream calls.
  */
 export async function getSheetDataAsObjects(env, ctx, sheetName) {
-  const spreadsheetId = env.SPREADSHEET_ID;
-  const apiKey = env.GOOGLE_SHEETS_API_KEY;
+  const spreadsheetId = env.SPREADSHEET_ID || '1WwrgXMq3KMb7FovwGHgjIzSMden1hgqT7bHf55WzTnQ';
+  const apiKey =
+    env.GOOGLE_SHEETS_API_KEY ||
+    env.GOOGLE_API_KEY ||
+    env.GSHEETS_API_KEY ||
+    env.GOOGLE_SHEETS_KEY ||
+    '';
 
   if (!spreadsheetId) {
     throw new Error('Environment variable SPREADSHEET_ID belum diatur.');
   }
 
   if (!apiKey) {
-    throw new Error('Secret GOOGLE_SHEETS_API_KEY belum diatur.');
+    throw new Error(
+      'GOOGLE_SHEETS_API_KEY belum diatur. Tambahkan secret dengan: wrangler secret put GOOGLE_SHEETS_API_KEY'
+    );
   }
 
   const ttl = Number(env.SHEETS_CACHE_TTL || 300);

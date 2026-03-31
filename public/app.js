@@ -90,7 +90,11 @@ async function callApi(endpoint, params = {}) {
     }
   });
 
-  return response.json();
+  const payload = await response.json();
+  if (!response.ok && !payload?.message) {
+    throw new Error(`Request gagal (${response.status})`);
+  }
+  return payload;
 }
 
 async function initApp() {
