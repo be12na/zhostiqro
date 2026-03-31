@@ -8,8 +8,8 @@ assets = { directory = "./public", binding = "ASSETS" }
 [vars]
 APP_NAME = "Aplikasi Buku Iqro 1-6 Lengkap"
 SHEETS_CACHE_TTL = "300"
-ALLOW_SEED_FALLBACK = "true"
-REQUIRE_APPS_SCRIPT_PROXY = "false"
+ALLOW_SEED_FALLBACK = "false"
+REQUIRE_APPS_SCRIPT_PROXY = "true"
 # Isi saat setup (boleh juga di .dev.vars)
 SPREADSHEET_ID = "1WwrgXMq3KMb7FovwGHgjIzSMden1hgqT7bHf55WzTnQ"
 APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbys4jJPffF0zqCZDGp-mXSwkF25DGxBrPVC9p-zeWKocK8wdA5vys-lTxUa5G3cCxOuRw/exec"
