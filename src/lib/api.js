@@ -15,6 +15,10 @@ export function createApiHandlers(env, ctx) {
     getCategories: () => getCategories(env, ctx),
     getMaterialsByCategory: (categoryId) => getMaterialsByCategory(env, ctx, categoryId),
     getMaterialById: (materialId) => getMaterialById(env, ctx, materialId),
+    searchMaterials: (searchTitle, categoryId) => searchMaterials(env, ctx, searchTitle, categoryId),
+    getLearningProgress: (username) => getLearningProgress(env, ctx, username),
+    saveLearningProgress: (username, materialId, materialTitle, categoryId, categoryName) =>
+      saveLearningProgress(env, ctx, username, materialId, materialTitle, categoryId, categoryName),
     getDailyPrayers: () => getDailyPrayers(env, ctx),
     getDzikirByType: (type) => getDzikirByType(env, ctx, type),
     getQuranSurahs: () => getQuranSurahs(env, ctx),
@@ -75,6 +79,98 @@ async function getMaterialById(env, ctx, materialId) {
 
     return createJsonResponse(true, 'Detail materi berhasil diambil.', material);
   });
+}
+
+async function searchMaterials(env, ctx, searchTitle, categoryId) {
+  return safeExecute(async () => {
+    const rows = await getSheetDataAsObjects(env, ctx, SHEET_NAMES.MATERIALS);
+    const activeRows = filterActiveRows(rows);
+
+    const normalizedTitle = String(searchTitle || '').trim().toLowerCase();
+    const normalizedCategoryId = String(categoryId || '').trim();
+
+    let categoryLookup = {};
+    try {
+      const categoryRows = await getSheetDataAsObjects(env, ctx, SHEET_NAMES.CATEGORIES);
+      categoryLookup = filterActiveRows(categoryRows).reduce((acc, item) => {
+        const key = String(item.category_id || '').trim();
+        if (key) {
+          acc[key] = String(item.category_name || '').trim();
+        }
+        return acc;
+      }, {});
+    } catch (_error) {
+      categoryLookup = {};
+    }
+
+    const filteredRows = activeRows.filter((item) => {
+      const itemCategoryId = String(item.category_id || '').trim();
+      const title = String(item.title || '').toLowerCase();
+      const subtitle = String(item.subtitle || '').toLowerCase();
+
+      const titleMatch = !normalizedTitle || title.includes(normalizedTitle) || subtitle.includes(normalizedTitle);
+      const categoryMatch = !normalizedCategoryId || itemCategoryId === normalizedCategoryId;
+      return titleMatch && categoryMatch;
+    });
+
+    const sortedRows = sortByNumberField(filteredRows, 'sort_order', 9999).map((item) => {
+      const categoryName = categoryLookup[String(item.category_id || '').trim()] || '';
+      return {
+        ...item,
+        category_name: item.category_name || categoryName
+      };
+    });
+
+    return createJsonResponse(true, 'Pencarian materi berhasil.', sortedRows);
+  });
+}
+
+async function getLearningProgress(env, ctx, username) {
+  return safeExecute(async () => {
+    const validationError = validateRequiredParam('username', username);
+    if (validationError) return validationError;
+
+    let rows = [];
+    try {
+      rows = await getSheetDataAsObjects(env, ctx, SHEET_NAMES.LEARNING_PROGRESS);
+    } catch (_error) {
+      return createJsonResponse(true, 'Belum ada progres belajar tersimpan.', {
+        username: String(username || '').trim(),
+        completed_material_ids: [],
+        items: []
+      });
+    }
+
+    const normalizedUsername = String(username || '').trim().toLowerCase();
+    const filteredRows = rows.filter(
+      (item) => String(item.username || '').trim().toLowerCase() === normalizedUsername
+    );
+
+    const idSet = new Set();
+    const items = [];
+    filteredRows.forEach((item) => {
+      const materialId = String(item.material_id || '').trim();
+      if (!materialId || idSet.has(materialId)) {
+        return;
+      }
+      idSet.add(materialId);
+      items.push(item);
+    });
+
+    return createJsonResponse(true, 'Progres belajar berhasil diambil.', {
+      username: String(username || '').trim(),
+      completed_material_ids: Array.from(idSet),
+      items
+    });
+  });
+}
+
+async function saveLearningProgress(_env, _ctx, _username, _materialId, _materialTitle, _categoryId, _categoryName) {
+  return createJsonResponse(
+    false,
+    'Penyimpanan progres membutuhkan APPS_SCRIPT_WEB_APP_URL agar worker dapat proxy penulisan ke Google Sheets.',
+    null
+  );
 }
 
 async function getDailyPrayers(env, ctx) {

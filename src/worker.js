@@ -6,6 +6,12 @@ const ROUTE_TO_HANDLER = {
   '/api/getCategories': { fn: 'getCategories', params: [] },
   '/api/getMaterialsByCategory': { fn: 'getMaterialsByCategory', params: ['categoryId'] },
   '/api/getMaterialById': { fn: 'getMaterialById', params: ['materialId'] },
+  '/api/searchMaterials': { fn: 'searchMaterials', params: ['searchTitle', 'categoryId'] },
+  '/api/getLearningProgress': { fn: 'getLearningProgress', params: ['username'] },
+  '/api/saveLearningProgress': {
+    fn: 'saveLearningProgress',
+    params: ['username', 'materialId', 'materialTitle', 'categoryId', 'categoryName']
+  },
   '/api/getDailyPrayers': { fn: 'getDailyPrayers', params: [] },
   '/api/getDzikirByType': { fn: 'getDzikirByType', params: ['type'] },
   '/api/getQuranSurahs': { fn: 'getQuranSurahs', params: [] },
