@@ -1,15 +1,15 @@
 :root {
-  --bg: #f4f8ff;
+  --bg: #f6fbf4;
   --card: #ffffff;
-  --text: #1d3652;
-  --muted: #5b738e;
-  --primary: #5b78ff;
-  --primary-soft: #e9eeff;
-  --accent: #ffd77a;
+  --text: #1e3f31;
+  --muted: #5a7567;
+  --primary: #2f8b66;
+  --primary-soft: #e7f6ef;
+  --accent: #f5c968;
   --success-soft: #e9fbef;
   --success-text: #1f8f50;
-  --border: #dce6f6;
-  --shadow: 0 12px 30px rgba(18, 66, 126, 0.09);
+  --border: #d5e7dd;
+  --shadow: 0 12px 30px rgba(23, 78, 58, 0.08);
   --radius: 22px;
 }
 
@@ -20,13 +20,13 @@
 body {
   margin: 0;
   font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-  background: radial-gradient(circle at top right, #eef4ff 0%, #f7fbff 45%, #f4f8ff 100%);
+  background: radial-gradient(circle at top right, #eef9f2 0%, #f9fdf8 45%, #f6fbf4 100%);
   color: var(--text);
   line-height: 1.6;
 }
 
 .app-header {
-  background: linear-gradient(135deg, #6a82ff 0%, #56c3ff 100%);
+  background: linear-gradient(135deg, #2c8b66 0%, #49a77f 60%, #8ac989 100%);
   color: #fff;
   padding: 28px 18px;
   text-align: center;
@@ -115,7 +115,132 @@ body {
 }
 
 .hero-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f2f6ff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f1fbf5 100%);
+}
+
+.hero-iqro {
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #edf8f1;
+  color: #257453;
+  border: 1px solid #cde7d8;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 7px 12px;
+}
+
+.hero-iqro h2 {
+  margin: 12px 0 8px;
+  line-height: 1.35;
+  font-size: 29px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.hero-highlight-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.hero-illustration {
+  display: flex;
+}
+
+.hero-illustration-card {
+  width: 100%;
+  background: linear-gradient(145deg, #2f8b66, #3fa174);
+  color: #fff;
+  border-radius: 18px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.hero-illustration-title {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 800;
+  opacity: 0.95;
+}
+
+.hero-highlight {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  padding: 9px 10px;
+  margin-top: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.home-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.info-card {
+  background: linear-gradient(180deg, #ffffff, #f9fdf9);
+}
+
+.info-card h3,
+.learning-flow h3 {
+  margin: 0 0 6px;
+}
+
+.learning-flow {
+  background: linear-gradient(180deg, #fffef9, #fffdf4);
+}
+
+.flow-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.flow-grid article {
+  border: 1px solid #efdfb5;
+  border-radius: 14px;
+  background: #fffbef;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.flow-grid span {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #f5c968;
+  color: #6a4a00;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+}
+
+.flow-grid p {
+  margin: 0;
 }
 
 .hero-card h2,
@@ -137,8 +262,8 @@ body {
 }
 
 .status-pill {
-  background: #fff4d4;
-  color: #9a6a00;
+  background: #fff6db;
+  color: #8c6200;
 }
 
 .completed-pill {
@@ -236,7 +361,7 @@ body {
   padding: 5px 10px;
   border-radius: 999px;
   background: var(--primary-soft);
-  color: #3557ac;
+  color: #2d7a5b;
 }
 
 .completed-meta {
@@ -310,6 +435,25 @@ audio {
 
   .form-grid {
     grid-template-columns: 1.4fr 1fr;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1.3fr 0.9fr;
+    align-items: center;
+  }
+
+  .home-info-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .flow-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .flow-grid article {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
   }
 }
 

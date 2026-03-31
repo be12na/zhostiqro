@@ -216,26 +216,73 @@ function renderHome() {
   APP_STATE.selectedSurah = null;
 
   const completedCount = Object.keys(APP_STATE.completedMaterialMap).length;
+  const totalCategories = APP_STATE.categories.length;
+  const firstCategory = totalCategories ? APP_STATE.categories[0] : null;
 
   let html = '';
-  html += '<section class="card hero-card">';
-  html += '<h2>Belajar Mengaji Lebih Seru ✨</h2>';
-  html += '<p class="muted">Pilih kategori materi, cari pelajaran cepat, lalu tandai jika sudah selesai.</p>';
-  html += `<div class="status-pill">Progres selesai: <strong>${escapeHtml(String(completedCount))}</strong> materi</div>`;
+  html += '<section class="card hero-card hero-iqro">';
+  html += '<div class="hero-grid">';
+  html += '<div>';
+  html += '<span class="hero-badge">🌙 Belajar Iqro Bertahap</span>';
+  html += '<h2>Temani Anak Belajar Membaca Iqro dengan Cara Hangat & Terarah</h2>';
+  html +=
+    '<p class="muted">Mulai dari huruf hijaiyah, latihan baca per level, hingga pantauan progres harian. Dirancang agar anak, orang tua, dan pendamping belajar bisa maju bersama dengan ritme yang nyaman.</p>';
+  html += '<div class="hero-actions">';
+  if (firstCategory) {
+    const firstCategoryId = escapeAttr(String(firstCategory.category_id || ''));
+    const firstCategoryName = escapeAttr(String(firstCategory.category_name || ''));
+    html += `<button type="button" class="btn btn-primary" data-action="open-category" data-category-id="${firstCategoryId}" data-category-name="${firstCategoryName}">Mulai Belajar Sekarang</button>`;
+  } else {
+    html += '<button type="button" class="btn btn-primary" data-action="open-quran">Jelajahi Materi</button>';
+  }
+  html += '<button type="button" class="btn" data-action="open-doa">Buka Doa Harian</button>';
+  html += '</div>';
+  html += '<div class="hero-highlight-list">';
+  html += `<span class="status-pill">Kategori aktif: <strong>${escapeHtml(String(totalCategories))}</strong> level</span>`;
+  html += `<span class="status-pill">Progres selesai: <strong>${escapeHtml(String(completedCount))}</strong> materi</span>`;
+  html += '</div>';
+  html += '</div>';
+  html += '<aside class="hero-illustration" aria-hidden="true">';
+  html += '<div class="hero-illustration-card">';
+  html += '<p class="hero-illustration-title">Rencana Belajar Hari Ini</p>';
+  html += '<div class="hero-highlight">📘 Iqro Dasar</div>';
+  html += '<div class="hero-highlight">🔁 Latihan Bacaan Pendek</div>';
+  html += '<div class="hero-highlight">✅ Tandai Materi Selesai</div>';
+  html += '</div>';
+  html += '</aside>';
+  html += '</div>';
+  html += '</section>';
+
+  html += '<section class="home-info-grid">';
+  html += '<article class="card info-card">';
+  html += '<h3>Belajar Sesuai Tahap Anak</h3>';
+  html +=
+    '<p class="muted">Materi dipisah per level agar anak tidak terburu-buru dan tetap percaya diri di setiap kemajuan kecil.</p>';
+  html += '</article>';
+  html += '<article class="card info-card">';
+  html += '<h3>Pendampingan Orang Tua Lebih Mudah</h3>';
+  html +=
+    '<p class="muted">Orang tua bisa melihat progres, memilih materi berikutnya, dan mengulang latihan kapan pun dibutuhkan.</p>';
+  html += '</article>';
+  html += '<article class="card info-card">';
+  html += '<h3>Ramah untuk Belajar Harian</h3>';
+  html +=
+    '<p class="muted">Antarmuka sederhana, tombol jelas, dan alur belajar ringkas membuat sesi mengaji terasa ringan dan konsisten.</p>';
+  html += '</article>';
   html += '</section>';
 
   html += '<section class="card profile-box">';
-  html += '<h3>Profil Belajar (tanpa login)</h3>';
-  html += '<p class="muted">Nama ini dipakai untuk menyimpan progres ke Google Sheets.</p>';
+  html += '<h3>Profil Belajar (Tanpa Login)</h3>';
+  html += '<p class="muted">Simpan nama belajar agar progres anak tetap tercatat dan mudah dilanjutkan.</p>';
   html += '<div class="form-row">';
   html += `<input id="usernameInput" class="field-control" type="text" placeholder="Contoh: Aisyah" value="${escapeAttr(APP_STATE.username || '')}" />`;
-  html += '<button type="button" class="btn btn-primary" data-action="save-username">Simpan Nama</button>';
+  html += '<button type="button" class="btn btn-primary" data-action="save-username">Simpan Nama Belajar</button>';
   html += '</div>';
   html += '</section>';
 
   html += '<section class="card search-card">';
-  html += '<h3>Cari Materi</h3>';
-  html += '<p class="muted">Filter berdasarkan judul dan kategori agar belajar lebih cepat.</p>';
+  html += '<h3>Cari Materi Iqro</h3>';
+  html += '<p class="muted">Temukan materi berdasarkan judul dan level supaya sesi belajar lebih terarah.</p>';
   html += '<div class="form-grid">';
   html += '<input id="searchTitleInput" class="field-control" type="text" placeholder="Cari judul materi..." />';
   html += '<select id="searchCategoryInput" class="field-control">';
@@ -253,7 +300,16 @@ function renderHome() {
   html += '</div>';
   html += '</section>';
 
-  html += '<section class="section-header"><h3>Kategori Utama</h3></section>';
+  html += '<section class="card learning-flow">';
+  html += '<h3>Alur Belajar yang Disarankan</h3>';
+  html += '<div class="flow-grid">';
+  html += '<article><span>1</span><p>Isi profil belajar anak terlebih dahulu.</p></article>';
+  html += '<article><span>2</span><p>Pilih level Iqro sesuai kemampuan saat ini.</p></article>';
+  html += '<article><span>3</span><p>Latihan rutin, lalu tandai materi yang sudah lancar.</p></article>';
+  html += '</div>';
+  html += '</section>';
+
+  html += '<section class="section-header"><h3>Level & Materi Iqro</h3></section>';
 
   if (!APP_STATE.categories.length) {
     html += '<div class="card empty">Belum ada kategori aktif.</div>';
