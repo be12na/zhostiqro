@@ -1,0 +1,422 @@
+const APP_STATE = {
+  config: {},
+  categories: [],
+  selectedCategory: null,
+  selectedMaterialId: null,
+  selectedSurah: null,
+  dzikirType: ''
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('yearNow').textContent = String(new Date().getFullYear());
+  bindEvents();
+  initApp();
+});
+
+function bindEvents() {
+  const topNav = document.getElementById('topNav');
+  const appMain = document.getElementById('appMain');
+
+  topNav.addEventListener('click', (event) => {
+    const target = event.target.closest('[data-action]');
+    if (!target) return;
+    handleAction(target);
+  });
+
+  appMain.addEventListener('click', (event) => {
+    const target = event.target.closest('[data-action]');
+    if (!target) return;
+    handleAction(target);
+  });
+}
+
+function handleAction(target) {
+  const action = target.getAttribute('data-action');
+
+  if (action === 'go-home') {
+    renderHome();
+    return;
+  }
+  if (action === 'open-doa') {
+    loadDailyPrayers();
+    return;
+  }
+  if (action === 'open-zikir') {
+    loadDzikir(target.getAttribute('data-type') || '');
+    return;
+  }
+  if (action === 'open-quran') {
+    loadQuranSurahs();
+    return;
+  }
+  if (action === 'open-category') {
+    loadMaterialsByCategory(
+      target.getAttribute('data-category-id') || '',
+      target.getAttribute('data-category-name') || ''
+    );
+    return;
+  }
+  if (action === 'open-material') {
+    loadMaterialDetail(target.getAttribute('data-material-id') || '');
+    return;
+  }
+  if (action === 'open-surah') {
+    loadQuranVerses(
+      target.getAttribute('data-surah-id') || '',
+      target.getAttribute('data-surah-name') || ''
+    );
+    return;
+  }
+  if (action === 'back-materials') {
+    loadMaterialsByCategory(
+      target.getAttribute('data-category-id') || '',
+      target.getAttribute('data-category-name') || ''
+    );
+  }
+}
+
+async function callApi(endpoint, params = {}) {
+  const url = new URL(`/api/${endpoint}`, window.location.origin);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      url.searchParams.set(key, String(value));
+    }
+  });
+
+  const response = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json'
+    }
+  });
+
+  return response.json();
+}
+
+async function initApp() {
+  showLoading('Memuat beranda...');
+
+  try {
+    const [configResponse, categoriesResponse] = await Promise.all([
+      callApi('getAppConfig'),
+      callApi('getCategories')
+    ]);
+
+    if (configResponse.success) APP_STATE.config = configResponse.data || {};
+    if (categoriesResponse.success) APP_STATE.categories = categoriesResponse.data || [];
+
+    renderHeaderFromConfig();
+    renderHome();
+  } catch (error) {
+    showError(`Gagal memuat data awal: ${error.message}`);
+  }
+}
+
+function renderHeaderFromConfig() {
+  const title = APP_STATE.config.app_name || 'Aplikasi Buku Iqro 1-6 Lengkap';
+  const description = APP_STATE.config.app_description || 'Belajar mengaji dengan materi terstruktur dan mudah dipahami.';
+
+  document.getElementById('appTitle').textContent = title;
+  document.getElementById('appDescription').textContent = description;
+}
+
+function showLoading(message) {
+  setMain(`<section class="card"><p>${escapeHtml(message || 'Memuat...')}</p></section>`);
+}
+
+function showError(message) {
+  setMain(`<section class="card"><p><strong>Terjadi kesalahan.</strong></p><p class="muted">${escapeHtml(message)}</p></section>`);
+}
+
+function setMain(html) {
+  document.getElementById('appMain').innerHTML = html;
+}
+
+function renderHome() {
+  APP_STATE.selectedCategory = null;
+  APP_STATE.selectedMaterialId = null;
+  APP_STATE.selectedSurah = null;
+
+  let html = '';
+  html += '<section class="card">';
+  html += '<h2>Daftar Kategori Utama</h2>';
+  html += '<p class="muted">Pilih kategori untuk melihat materi belajar.</p>';
+  html += '</section>';
+
+  if (!APP_STATE.categories.length) {
+    html += '<div class="card empty">Belum ada kategori aktif.</div>';
+    setMain(html);
+    return;
+  }
+
+  html += '<section class="grid">';
+  APP_STATE.categories.forEach((category) => {
+    const categoryId = escapeAttr(String(category.category_id || ''));
+    const categoryName = escapeAttr(String(category.category_name || ''));
+
+    html += '<article class="card category-card">';
+    html += `<h3>${escapeHtml(category.category_name || '-')}</h3>`;
+    if (category.description) {
+      html += `<p class="muted">${escapeHtml(category.description)}</p>`;
+    }
+    html += `<button type="button" class="btn btn-primary" data-action="open-category" data-category-id="${categoryId}" data-category-name="${categoryName}">Lihat Materi</button>`;
+    html += '</article>';
+  });
+  html += '</section>';
+
+  setMain(html);
+}
+
+async function loadMaterialsByCategory(categoryId, categoryName) {
+  APP_STATE.selectedCategory = { id: categoryId, name: categoryName };
+  showLoading('Memuat daftar materi...');
+
+  try {
+    const response = await callApi('getMaterialsByCategory', { categoryId });
+    if (!response.success) {
+      showError(response.message || 'Gagal memuat materi.');
+      return;
+    }
+
+    const materials = response.data || [];
+    let html = '<section class="card">';
+    html += '<button type="button" class="btn" data-action="go-home">← Kembali</button>';
+    html += `<h2>Materi: ${escapeHtml(categoryName || '-')}</h2>`;
+    html += '<p class="muted">Hanya menampilkan materi aktif sesuai urutan.</p>';
+    html += '</section>';
+
+    if (!materials.length) {
+      html += '<div class="card empty">Belum ada materi aktif untuk kategori ini.</div>';
+      setMain(html);
+      return;
+    }
+
+    html += '<section class="grid">';
+    materials.forEach((item) => {
+      html += '<article class="card material-card">';
+      html += `<span class="meta">Urutan: ${escapeHtml(String(item.sort_order || '-'))}</span>`;
+      html += `<span class="meta">Level: ${escapeHtml(String(item.level_name || '-'))}</span>`;
+      html += `<h3>${escapeHtml(item.title || '-')}</h3>`;
+      if (item.subtitle) {
+        html += `<p class="muted">${escapeHtml(item.subtitle)}</p>`;
+      }
+      html += `<button type="button" class="btn btn-primary" data-action="open-material" data-material-id="${escapeAttr(String(item.material_id || ''))}">Buka Detail</button>`;
+      html += '</article>';
+    });
+    html += '</section>';
+
+    setMain(html);
+  } catch (error) {
+    showError(`Gagal memuat materi: ${error.message}`);
+  }
+}
+
+async function loadMaterialDetail(materialId) {
+  APP_STATE.selectedMaterialId = materialId;
+  showLoading('Memuat detail materi...');
+
+  try {
+    const response = await callApi('getMaterialById', { materialId });
+    if (!response.success || !response.data) {
+      showError(response.message || 'Detail materi tidak ditemukan.');
+      return;
+    }
+
+    const item = response.data;
+    const backCategoryId = APP_STATE.selectedCategory ? APP_STATE.selectedCategory.id : item.category_id;
+    const backCategoryName = APP_STATE.selectedCategory ? APP_STATE.selectedCategory.name : 'Kategori';
+
+    let html = '<section class="card">';
+    html += `<button type="button" class="btn" data-action="back-materials" data-category-id="${escapeAttr(String(backCategoryId || ''))}" data-category-name="${escapeAttr(String(backCategoryName || 'Kategori'))}">← Kembali ke Daftar</button>`;
+    html += `<h2>${escapeHtml(item.title || '-')}</h2>`;
+
+    if (item.subtitle) {
+      html += `<p class="muted">${escapeHtml(item.subtitle)}</p>`;
+    }
+    if (item.content_arab) {
+      html += `<div class="detail-arab">${escapeHtml(item.content_arab)}</div>`;
+    }
+    if (item.content_latin) {
+      html += `<p class="detail-latin"><strong>Latin:</strong><br />${nl2br(escapeHtml(item.content_latin))}</p>`;
+    }
+    if (item.content_translation) {
+      html += `<p class="detail-translation"><strong>Terjemahan:</strong><br />${nl2br(escapeHtml(item.content_translation))}</p>`;
+    }
+    if (item.image_url) {
+      html += `<img class="material-image" src="${escapeAttr(item.image_url)}" alt="Gambar materi" />`;
+    }
+    if (item.audio_url) {
+      html += `<audio controls src="${escapeAttr(item.audio_url)}"></audio>`;
+    }
+    html += '</section>';
+
+    setMain(html);
+  } catch (error) {
+    showError(`Gagal memuat detail materi: ${error.message}`);
+  }
+}
+
+async function loadDailyPrayers() {
+  showLoading('Memuat doa harian...');
+
+  try {
+    const response = await callApi('getDailyPrayers');
+    if (!response.success) {
+      showError(response.message || 'Gagal memuat doa harian.');
+      return;
+    }
+
+    const list = response.data || [];
+    let html = '<section class="card"><h2>Doa Harian</h2></section>';
+
+    if (!list.length) {
+      html += '<div class="card empty">Belum ada doa harian aktif.</div>';
+    } else {
+      list.forEach((item) => {
+        html += '<article class="card prayer-card">';
+        html += `<h3>${escapeHtml(item.title || '-')}</h3>`;
+        html += `<div class="detail-arab">${escapeHtml(item.arabic_text || '-')}</div>`;
+        html += `<p><strong>Latin:</strong><br />${nl2br(escapeHtml(item.latin_text || '-'))}</p>`;
+        html += `<p><strong>Terjemahan:</strong><br />${nl2br(escapeHtml(item.translation_text || '-'))}</p>`;
+        html += '</article>';
+      });
+    }
+
+    setMain(html);
+  } catch (error) {
+    showError(`Gagal memuat doa harian: ${error.message}`);
+  }
+}
+
+async function loadDzikir(type) {
+  APP_STATE.dzikirType = type || '';
+  showLoading('Memuat data zikir...');
+
+  try {
+    const response = await callApi('getDzikirByType', { type: APP_STATE.dzikirType });
+    if (!response.success) {
+      showError(response.message || 'Gagal memuat zikir.');
+      return;
+    }
+
+    const list = response.data || [];
+    let html = '<section class="card">';
+    html += '<h2>Zikir Pagi & Petang</h2>';
+    html += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">';
+    html += '<button type="button" class="btn" data-action="open-zikir" data-type="">Semua</button>';
+    html += '<button type="button" class="btn" data-action="open-zikir" data-type="pagi">Pagi</button>';
+    html += '<button type="button" class="btn" data-action="open-zikir" data-type="petang">Petang</button>';
+    html += '</div></section>';
+
+    if (!list.length) {
+      html += '<div class="card empty">Belum ada data zikir aktif untuk filter ini.</div>';
+    } else {
+      list.forEach((item) => {
+        html += '<article class="card dzikir-card">';
+        html += `<span class="meta">Tipe: ${escapeHtml(item.dzikir_type || '-')}</span>`;
+        html += `<span class="meta">Ulang: ${escapeHtml(String(item.repeat_count || '-'))}x</span>`;
+        html += `<h3>${escapeHtml(item.title || '-')}</h3>`;
+        html += `<div class="detail-arab">${escapeHtml(item.arabic_text || '-')}</div>`;
+        html += `<p><strong>Latin:</strong><br />${nl2br(escapeHtml(item.latin_text || '-'))}</p>`;
+        html += `<p><strong>Terjemahan:</strong><br />${nl2br(escapeHtml(item.translation_text || '-'))}</p>`;
+        html += '</article>';
+      });
+    }
+
+    setMain(html);
+  } catch (error) {
+    showError(`Gagal memuat zikir: ${error.message}`);
+  }
+}
+
+async function loadQuranSurahs() {
+  APP_STATE.selectedSurah = null;
+  showLoading('Memuat daftar surat...');
+
+  try {
+    const response = await callApi('getQuranSurahs');
+    if (!response.success) {
+      showError(response.message || 'Gagal memuat daftar surat.');
+      return;
+    }
+
+    const list = response.data || [];
+    let html = '<section class="card"><h2>Daftar Surat Al-Quran</h2><p class="muted">Klik surat untuk melihat ayat.</p></section>';
+
+    if (!list.length) {
+      html += '<div class="card empty">Belum ada data surat aktif.</div>';
+    } else {
+      html += '<section class="grid">';
+      list.forEach((surah) => {
+        html += '<article class="card surah-card">';
+        html += `<h3>${escapeHtml(String(surah.surah_number || '-'))}. ${escapeHtml(surah.surah_name_latin || '-')}</h3>`;
+        html += `<p class="muted">${escapeHtml(surah.surah_name_indonesia || '-')}</p>`;
+        html += `<span class="meta">Ayat: ${escapeHtml(String(surah.total_verses || '-'))}</span>`;
+        html += `<span class="meta">Wahyu: ${escapeHtml(surah.revelation_type || '-')}</span>`;
+        html += `<button type="button" class="btn btn-primary" data-action="open-surah" data-surah-id="${escapeAttr(String(surah.surah_id || ''))}" data-surah-name="${escapeAttr(String(surah.surah_name_latin || ''))}">Lihat Ayat</button>`;
+        html += '</article>';
+      });
+      html += '</section>';
+    }
+
+    setMain(html);
+  } catch (error) {
+    showError(`Gagal memuat surat: ${error.message}`);
+  }
+}
+
+async function loadQuranVerses(surahId, surahName) {
+  APP_STATE.selectedSurah = { id: surahId, name: surahName };
+  showLoading('Memuat ayat surat...');
+
+  try {
+    const response = await callApi('getQuranVersesBySurah', { surahId });
+    if (!response.success) {
+      showError(response.message || 'Gagal memuat ayat surat.');
+      return;
+    }
+
+    const list = response.data || [];
+    let html = '<section class="card">';
+    html += '<button type="button" class="btn" data-action="open-quran">← Kembali ke Daftar Surat</button>';
+    html += `<h2>Surat: ${escapeHtml(surahName || '-')}</h2>`;
+    html += '</section>';
+
+    if (!list.length) {
+      html += '<div class="card empty">Belum ada ayat aktif pada surat ini.</div>';
+    } else {
+      list.forEach((verse) => {
+        html += '<article class="card">';
+        html += `<span class="meta">Ayat ${escapeHtml(String(verse.verse_number || '-'))}</span>`;
+        html += `<div class="detail-arab">${escapeHtml(verse.arabic_text || '-')}</div>`;
+        html += `<p><strong>Latin:</strong><br />${nl2br(escapeHtml(verse.latin_text || '-'))}</p>`;
+        html += `<p><strong>Terjemahan:</strong><br />${nl2br(escapeHtml(verse.translation_text || '-'))}</p>`;
+        if (verse.audio_url) {
+          html += `<audio controls src="${escapeAttr(verse.audio_url)}"></audio>`;
+        }
+        html += '</article>';
+      });
+    }
+
+    setMain(html);
+  } catch (error) {
+    showError(`Gagal memuat ayat: ${error.message}`);
+  }
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, '&#096;');
+}
+
+function nl2br(value) {
+  return String(value).replace(/\n/g, '<br />');
+}

@@ -1,0 +1,17 @@
+name = "zhostiqro"
+main = "src/worker.js"
+compatibility_date = "2026-03-31"
+workers_dev = true
+
+assets = { directory = "./public", binding = "ASSETS" }
+
+[vars]
+APP_NAME = "Aplikasi Buku Iqro 1-6 Lengkap"
+SHEETS_CACHE_TTL = "300"
+# Isi saat setup (boleh juga di .dev.vars)
+SPREADSHEET_ID = ""
+
+[env.production.vars]
+APP_NAME = "Aplikasi Buku Iqro 1-6 Lengkap"
+SHEETS_CACHE_TTL = "600"
+SPREADSHEET_ID = ""

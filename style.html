@@ -1,0 +1,175 @@
+<style>
+  :root {
+    --bg: #f7fbff;
+    --card: #ffffff;
+    --text: #123047;
+    --muted: #537188;
+    --primary: #2d7ff9;
+    --primary-soft: #e8f1ff;
+    --accent: #ffcc5b;
+    --border: #dce8f5;
+    --shadow: 0 8px 24px rgba(23, 77, 128, 0.08);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .app-header {
+    background: linear-gradient(135deg, #2d7ff9, #4bb4ff);
+    color: #fff;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .app-header h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+  }
+
+  .app-header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.95;
+  }
+
+  .top-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 12px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .nav-btn,
+  .btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+
+  .nav-btn:hover,
+  .btn:hover {
+    background: var(--primary-soft);
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(0.95);
+  }
+
+  .app-main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 14px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+  }
+
+  .category-card h3,
+  .material-card h3,
+  .surah-card h3,
+  .prayer-card h3,
+  .dzikir-card h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .meta {
+    display: inline-block;
+    margin: 2px 6px 6px 0;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: #2154a0;
+  }
+
+  .detail-arab {
+    font-size: 28px;
+    line-height: 1.9;
+    text-align: right;
+    margin: 10px 0;
+  }
+
+  .detail-latin,
+  .detail-translation {
+    margin: 8px 0;
+  }
+
+  img.material-image {
+    width: 100%;
+    max-width: 380px;
+    border-radius: 12px;
+    display: block;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+  }
+
+  audio {
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 18px;
+  }
+
+  .app-footer {
+    text-align: center;
+    padding: 14px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .app-header h1 {
+      font-size: 20px;
+    }
+
+    .detail-arab {
+      font-size: 24px;
+    }
+  }
+</style>
