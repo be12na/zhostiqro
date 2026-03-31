@@ -10,8 +10,10 @@ APP_NAME = "Aplikasi Buku Iqro 1-6 Lengkap"
 SHEETS_CACHE_TTL = "300"
 # Isi saat setup (boleh juga di .dev.vars)
 SPREADSHEET_ID = "1WwrgXMq3KMb7FovwGHgjIzSMden1hgqT7bHf55WzTnQ"
+APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbys4jJPffF0zqCZDGp-mXSwkF25DGxBrPVC9p-zeWKocK8wdA5vys-lTxUa5G3cCxOuRw/exec"
 
 [env.production.vars]
 APP_NAME = "Aplikasi Buku Iqro 1-6 Lengkap"
 SHEETS_CACHE_TTL = "600"
 SPREADSHEET_ID = "1WwrgXMq3KMb7FovwGHgjIzSMden1hgqT7bHf55WzTnQ"
+APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbys4jJPffF0zqCZDGp-mXSwkF25DGxBrPVC9p-zeWKocK8wdA5vys-lTxUa5G3cCxOuRw/exec"

@@ -1,3 +1,5 @@
+import { getSeedRowsBySheetName } from './seedData.js';
+
 /**
  * Read one sheet from Google Sheets API and map rows into object array.
  * Uses Workers Cache API to reduce repeated upstream calls.
@@ -16,9 +18,7 @@ export async function getSheetDataAsObjects(env, ctx, sheetName) {
   }
 
   if (!apiKey) {
-    throw new Error(
-      'GOOGLE_SHEETS_API_KEY belum diatur. Tambahkan secret dengan: wrangler secret put GOOGLE_SHEETS_API_KEY'
-    );
+    return getSeedRowsBySheetName(sheetName);
   }
 
   const ttl = Number(env.SHEETS_CACHE_TTL || 300);
@@ -41,8 +41,7 @@ export async function getSheetDataAsObjects(env, ctx, sheetName) {
 
   const payload = await response.json();
   if (!response.ok) {
-    const reason = payload?.error?.message || 'Gagal mengambil data Google Sheets.';
-    throw new Error(reason);
+    return getSeedRowsBySheetName(sheetName);
   }
 
   const values = payload.values || [];

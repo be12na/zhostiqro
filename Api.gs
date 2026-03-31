@@ -130,3 +130,66 @@ function getQuranVersesBySurah(surahId) {
     return jsonResponse_(true, 'Ayat surat berhasil diambil.', sortedRows);
   });
 }
+
+/**
+ * API gateway response for Apps Script Web App URL.
+ * Supports action query parameter and keeps JSON contract.
+ */
+function handleApiGatewayRequest_(e) {
+  var params = extractApiParams_(e);
+  var action = String(params.action || '').trim();
+
+  if (!action) {
+    return toJsonOutput_(jsonResponse_(false, 'Parameter wajib: action', null));
+  }
+
+  var routes = {
+    getAppConfig: function() { return getAppConfig(); },
+    getCategories: function() { return getCategories(); },
+    getMaterialsByCategory: function() { return getMaterialsByCategory(params.categoryId); },
+    getMaterialById: function() { return getMaterialById(params.materialId); },
+    getDailyPrayers: function() { return getDailyPrayers(); },
+    getDzikirByType: function() { return getDzikirByType(params.type); },
+    getQuranSurahs: function() { return getQuranSurahs(); },
+    getQuranVersesBySurah: function() { return getQuranVersesBySurah(params.surahId); }
+  };
+
+  var handler = routes[action];
+  if (!handler) {
+    return toJsonOutput_(jsonResponse_(false, 'Action API tidak ditemukan: ' + action, null));
+  }
+
+  var payload = handler();
+  return toJsonOutput_(payload);
+}
+
+function extractApiParams_(e) {
+  var params = {};
+
+  if (e && e.parameter) {
+    params = e.parameter;
+  }
+
+  if (e && e.postData && e.postData.contents) {
+    try {
+      var body = JSON.parse(e.postData.contents);
+      if (body && typeof body === 'object') {
+        for (var key in body) {
+          if (body.hasOwnProperty(key) && (params[key] === undefined || params[key] === '')) {
+            params[key] = body[key];
+          }
+        }
+      }
+    } catch (_error) {
+      // Ignore invalid JSON body and keep query params.
+    }
+  }
+
+  return params;
+}
+
+function toJsonOutput_(payload) {
+  return ContentService
+    .createTextOutput(JSON.stringify(payload))
+    .setMimeType(ContentService.MimeType.JSON);
+}
