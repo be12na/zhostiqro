@@ -1,0 +1,9 @@
+material_id,category_id,title,subtitle,content_arab,content_latin,content_translation,lesson_type,level_name,image_url,audio_url,page_number,sort_order,is_featured,is_active
+mat_iqro1_001,cat_iqro_1,Huruf Alif Ba Ta,Pengenalan huruf awal,ا ب ت,Alif Ba Ta,Pengenalan tiga huruf hijaiyah pertama,iqro,Pemula,,,1,1,TRUE,TRUE
+mat_iqro1_002,cat_iqro_1,Huruf Tsa Jim Ha,Lanjutan huruf awal,ث ج ح,Tsa Jim Ha,Pengenalan tiga huruf hijaiyah lanjutan,iqro,Pemula,,,2,2,FALSE,TRUE
+mat_iqro2_001,cat_iqro_2,Harakat Fathah,Bacaan bunyi a,بَ تَ ثَ,Ba Ta Tsa,Dasar membaca huruf dengan fathah,iqro,Dasar,,,3,1,TRUE,TRUE
+mat_iqro3_001,cat_iqro_3,Tanwin Fathah,Dasar bunyi an,بً تً ثً,Ban Tan Tsan,Dasar membaca tanwin fathah,iqro,Menengah,,,4,1,FALSE,TRUE
+mat_iqro4_001,cat_iqro_4,Bacaan Sukun,Dasar huruf mati,اَبْتَ,Abta,Latihan membaca huruf dengan sukun,iqro,Menengah,,,5,1,FALSE,TRUE
+mat_iqro5_001,cat_iqro_5,Latihan Mad Thobii,Dasar panjang dua harakat,قَالَ وَقِيلَ,Qoola Wa Qiila,Latihan bacaan mad dasar dua harakat,iqro,Lanjutan,,,6,1,TRUE,TRUE
+mat_iqro6_001,cat_iqro_6,Latihan Ayat Pendek,Membaca ayat sederhana,بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ,Bismillahirrohmanirrohim,Latihan membaca ayat pendek dengan tartil,iqro,Lanjutan,,,7,1,TRUE,TRUE
+mat_hij_001,cat_hijaiyah,Huruf Hijaiyah Lengkap,Daftar 28 huruf,ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن و ه ي,Alif Ba Ta Tsa Jim Ha Kha Dal Dzal Ro Za Sin Syin Shod Dhod Tho Zho Ain Ghoin Fa Qof Kaf Lam Mim Nun Wawu Ha Ya,Daftar huruf hijaiyah lengkap untuk hafalan,huruf,Pemula,,,1,1,TRUE,TRUE

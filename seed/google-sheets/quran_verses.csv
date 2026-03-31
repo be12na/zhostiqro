@@ -1,0 +1,26 @@
+verse_id,surah_id,verse_number,arabic_text,latin_text,translation_text,audio_url,sort_order,is_active
+v_001_001,surah_001,1,بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ,Bismillahirrahmanirrahim,Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang,,1,TRUE
+v_001_002,surah_001,2,الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ,Alhamdu lillahi rabbil alamin,Segala puji bagi Allah Tuhan seluruh alam,,2,TRUE
+v_001_003,surah_001,3,الرَّحْمَٰنِ الرَّحِيمِ,Arrahmanirrahim,Yang Maha Pengasih lagi Maha Penyayang,,3,TRUE
+v_001_004,surah_001,4,مَالِكِ يَوْمِ الدِّينِ,Maliki yawmiddin,Pemilik hari pembalasan,,4,TRUE
+v_001_005,surah_001,5,إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ,Iyyaka nabudu wa iyyaka nastain,Hanya kepada-Mu kami menyembah dan hanya kepada-Mu kami memohon pertolongan,,5,TRUE
+v_001_006,surah_001,6,اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ,Ihdinassiratal mustaqim,Tunjukilah kami jalan yang lurus,,6,TRUE
+v_001_007,surah_001,7,صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ,Siratal lazina anamta alaihim,Yaitu jalan orang yang Engkau beri nikmat,,7,TRUE
+v_103_001,surah_103,1,وَالْعَصْرِ,Wal asr,Demi masa,,1,TRUE
+v_103_002,surah_103,2,إِنَّ الْإِنْسَانَ لَفِي خُسْرٍ,Innal insana lafi khusr,Sungguh manusia berada dalam kerugian,,2,TRUE
+v_103_003,surah_103,3,إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ,Illal lazina amanu wa amilus salihat,Kecuali orang yang beriman beramal saleh saling menasihati dalam kebenaran dan kesabaran,,3,TRUE
+v_112_001,surah_112,1,قُلْ هُوَ اللَّهُ أَحَدٌ,Qul huwallahu ahad,Katakanlah Allah Maha Esa,,1,TRUE
+v_112_002,surah_112,2,اللَّهُ الصَّمَدُ,Allahu samad,Allah tempat bergantung segala sesuatu,,2,TRUE
+v_112_003,surah_112,3,لَمْ يَلِدْ وَلَمْ يُولَدْ,Lam yalid wa lam yulad,Dia tidak beranak dan tidak diperanakkan,,3,TRUE
+v_112_004,surah_112,4,وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ,Wa lam yakun lahu kufuwan ahad,Dan tidak ada sesuatu yang setara dengan-Nya,,4,TRUE
+v_113_001,surah_113,1,قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ,Qul a uzu birabbil falaq,Katakanlah aku berlindung kepada Tuhan waktu subuh,,1,TRUE
+v_113_002,surah_113,2,مِنْ شَرِّ مَا خَلَقَ,Min sharri ma khalaq,Dari kejahatan makhluk yang Dia ciptakan,,2,TRUE
+v_113_003,surah_113,3,وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ,Wa min sharri ghasiqin iza waqab,Dan dari kejahatan malam apabila telah gelap,,3,TRUE
+v_113_004,surah_113,4,وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ,Wa min sharrin naffasati fil uqad,Dan dari kejahatan para peniup pada buhul-buhul,,4,TRUE
+v_113_005,surah_113,5,وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ,Wa min sharri hasidin iza hasad,Dan dari kejahatan orang dengki apabila dengki,,5,TRUE
+v_114_001,surah_114,1,قُلْ أَعُوذُ بِرَبِّ النَّاسِ,Qul a uzu birabbin nas,Katakanlah aku berlindung kepada Tuhan manusia,,1,TRUE
+v_114_002,surah_114,2,مَلِكِ النَّاسِ,Malikin nas,Raja manusia,,2,TRUE
+v_114_003,surah_114,3,إِلَٰهِ النَّاسِ,Ilahin nas,Sembahan manusia,,3,TRUE
+v_114_004,surah_114,4,مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ,Min sharril waswasil khannas,Dari kejahatan bisikan setan yang bersembunyi,,4,TRUE
+v_114_005,surah_114,5,الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ,Allazi yuwaswisu fi sudurin nas,Yang membisikkan ke dalam dada manusia,,5,TRUE
+v_114_006,surah_114,6,مِنَ الْجِنَّةِ وَالنَّاسِ,Minal jinnati wannas,Dari golongan jin dan manusia,,6,TRUE

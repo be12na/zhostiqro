@@ -9,9 +9,9 @@ assets = { directory = "./public", binding = "ASSETS" }
 APP_NAME = "Aplikasi Buku Iqro 1-6 Lengkap"
 SHEETS_CACHE_TTL = "300"
 # Isi saat setup (boleh juga di .dev.vars)
-SPREADSHEET_ID = ""
+SPREADSHEET_ID = "1WwrgXMq3KMb7FovwGHgjIzSMden1hgqT7bHf55WzTnQ"
 
 [env.production.vars]
 APP_NAME = "Aplikasi Buku Iqro 1-6 Lengkap"
 SHEETS_CACHE_TTL = "600"
-SPREADSHEET_ID = ""
+SPREADSHEET_ID = "1WwrgXMq3KMb7FovwGHgjIzSMden1hgqT7bHf55WzTnQ"

@@ -47,7 +47,8 @@ function safeExecute_(callback) {
  * Convert Google Sheet rows into object array.
  */
 function getSheetDataAsObjects_(sheetName) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  var spreadsheet = getSpreadsheetByConfig_();
+  var sheet = spreadsheet.getSheetByName(sheetName);
   if (!sheet) {
     throw new Error('Sheet tidak ditemukan: ' + sheetName);
   }
@@ -69,6 +70,22 @@ function getSheetDataAsObjects_(sheetName) {
     });
     return obj;
   });
+}
+
+/**
+ * Open spreadsheet with fixed ID if available, otherwise fallback to active spreadsheet.
+ */
+function getSpreadsheetByConfig_() {
+  if (typeof APPSCRIPT_CONFIG !== 'undefined' && APPSCRIPT_CONFIG.SPREADSHEET_ID) {
+    return SpreadsheetApp.openById(APPSCRIPT_CONFIG.SPREADSHEET_ID);
+  }
+
+  var activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!activeSpreadsheet) {
+    throw new Error('Spreadsheet aktif tidak ditemukan. Isi APPSCRIPT_CONFIG.SPREADSHEET_ID terlebih dahulu.');
+  }
+
+  return activeSpreadsheet;
 }
 
 /**

@@ -1,0 +1,6 @@
+surah_id,surah_number,surah_name_arabic,surah_name_latin,surah_name_indonesia,total_verses,revelation_type,is_active
+surah_001,1,الفاتحة,Al Fatihah,Pembukaan,7,makkiyah,TRUE
+surah_103,103,العصر,Al Asr,Masa,3,makkiyah,TRUE
+surah_112,112,الإخلاص,Al Ikhlas,Ikhlas,4,makkiyah,TRUE
+surah_113,113,الفلق,Al Falaq,Waktu Subuh,5,makkiyah,TRUE
+surah_114,114,الناس,An Nas,Manusia,6,makkiyah,TRUE
