@@ -1,7 +1,13 @@
 dzikir_id,dzikir_type,title,arabic_text,latin_text,translation_text,source_reference,repeat_count,sort_order,is_active
-dzikir_001,pagi,Ayat Kursi,اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ,Allahu la ilaha illa huwal hayyul qayyum,Allah tidak ada tuhan selain Dia Yang Maha Hidup lagi Maha Berdiri sendiri,H.R. An Nasai,1,1,TRUE
-dzikir_002,pagi,Surat Al Ikhlas,قُلْ هُوَ اللَّهُ أَحَدٌ,Qul huwallahu ahad,Katakanlah Allah Maha Esa,H.R. Abu Dawud,3,2,TRUE
-dzikir_003,pagi,Doa Pagi,اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا,Allahumma bika asbahna wa bika amsayna,Ya Allah dengan-Mu kami memasuki pagi dan sore,H.R. Tirmidzi,1,3,TRUE
-dzikir_004,petang,Ayat Kursi,اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ,Allahu la ilaha illa huwal hayyul qayyum,Allah tidak ada tuhan selain Dia Yang Maha Hidup lagi Maha Berdiri sendiri,H.R. An Nasai,1,4,TRUE
-dzikir_005,petang,Surat Al Falaq,قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ,Qul a uzu birabbil falaq,Katakanlah aku berlindung kepada Tuhan yang menguasai subuh,H.R. Abu Dawud,3,5,TRUE
-dzikir_006,petang,Doa Petang,اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا,Allahumma bika amsayna wa bika asbahna,Ya Allah dengan-Mu kami memasuki sore dan pagi,H.R. Tirmidzi,1,6,TRUE
+DZI001,pagi,Taawudz Pagi,أَعُوْذُ بِاللّٰهِ مِنَ الشَّيْطَانِ الرَّجِيْمِ,a-uudzu billahi minasy syaithanir rajiim,Aku berlindung kepada Allah dari setan yang terkutuk,Adab Harian,1,1,TRUE
+DZI002,pagi,Ayat Kursi Pagi,اللّٰهُ لَا إِلٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّوْمُ,allahu laa ilaaha illaa huwal hayyul qayyuum,Allah tidak ada tuhan selain Dia Yang Maha Hidup lagi Maha Berdiri sendiri,HR. Nasa'i,1,2,TRUE
+DZI003,pagi,Tasbih Pagi,سُبْحَانَ اللّٰهِ,subhanallah,Maha Suci Allah,HR. Muslim,33,3,TRUE
+DZI004,pagi,Tahmid Pagi,اَلْحَمْدُ لِلّٰهِ,alhamdulillah,Segala puji bagi Allah,HR. Muslim,33,4,TRUE
+DZI005,pagi,Takbir Pagi,اللّٰهُ أَكْبَرُ,allahu akbar,Allah Maha Besar,HR. Muslim,33,5,TRUE
+DZI006,pagi,Istighfar Pagi,أَسْتَغْفِرُ اللّٰهَ,astaghfirullah,Aku memohon ampun kepada Allah,HR. Abu Dawud,100,6,TRUE
+DZI007,petang,Taawudz Petang,أَعُوْذُ بِاللّٰهِ مِنَ الشَّيْطَانِ الرَّجِيْمِ,a-uudzu billahi minasy syaithanir rajiim,Aku berlindung kepada Allah dari setan yang terkutuk,Adab Harian,1,1,TRUE
+DZI008,petang,Ayat Kursi Petang,اللّٰهُ لَا إِلٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّوْمُ,allahu laa ilaaha illaa huwal hayyul qayyuum,Allah tidak ada tuhan selain Dia Yang Maha Hidup lagi Maha Berdiri sendiri,HR. Nasa'i,1,2,TRUE
+DZI009,petang,Tasbih Petang,سُبْحَانَ اللّٰهِ,subhanallah,Maha Suci Allah,HR. Muslim,33,3,TRUE
+DZI010,petang,Tahmid Petang,اَلْحَمْدُ لِلّٰهِ,alhamdulillah,Segala puji bagi Allah,HR. Muslim,33,4,TRUE
+DZI011,petang,Takbir Petang,اللّٰهُ أَكْبَرُ,allahu akbar,Allah Maha Besar,HR. Muslim,33,5,TRUE
+DZI012,petang,Istighfar Petang,أَسْتَغْفِرُ اللّٰهَ,astaghfirullah,Aku memohon ampun kepada Allah,HR. Abu Dawud,100,6,TRUE

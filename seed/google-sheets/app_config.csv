@@ -1,8 +1,11 @@
 config_key,config_value,description
-app_name,Aplikasi Buku Iqro 1-6 Lengkap,Nama aplikasi utama
-app_description,Belajar mengaji dengan materi terstruktur dan mudah dipahami,Deskripsi singkat aplikasi
-home_banner_title,Mulai belajar hari ini,Teks judul beranda
-home_banner_subtitle,Pilih kategori sesuai kebutuhan belajar,Teks pendukung beranda
-default_dzikir_type,pagi,Filter default zikir
-support_contact,admin@zhostiqro.local,Kontak operasional awal
-apps_script_web_app_url,https://script.google.com/macros/s/AKfycbys4jJPffF0zqCZDGp-mXSwkF25DGxBrPVC9p-zeWKocK8wdA5vys-lTxUa5G3cCxOuRw/exec,Endpoint Web App Apps Script
+app_name,Sahabat Iqro Ceria,Nama aplikasi
+tagline,Belajar mengaji pelan-pelan jadi menyenangkan,Tagline utama aplikasi
+support_email,support@sahabatiqro.id,Email dukungan pengguna
+version,1.0.0-mvp,Versi aplikasi saat ini
+footer_text,Sahabat Iqro Ceria untuk belajar mengaji keluarga,Text footer aplikasi
+primary_color,#5B78FF,Warna utama aplikasi
+secondary_color,#FFD77A,Warna sekunder aplikasi
+app_description,Aplikasi pembelajaran mengaji bertahap untuk anak dan pemula dengan materi Iqro doa zikir dan surat pendek,Deskripsi singkat aplikasi
+publisher_name,PT Edukasi Qurani Nusantara,Nama developer atau publisher
+banner_url,,URL banner utama opsional

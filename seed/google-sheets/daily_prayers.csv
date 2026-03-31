@@ -1,6 +1,13 @@
 prayer_id,title,arabic_text,latin_text,translation_text,source_reference,category_tag,sort_order,is_active
-prayer_001,Doa Sebelum Makan,اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ,Allahumma barik lana fima razaqtana wa qina adzaban nar,Ya Allah berkahilah rezeki kami dan lindungi kami dari azab neraka,H.R. Tirmidzi,makan,1,TRUE
-prayer_002,Doa Sesudah Makan,الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مِنَ الْمُسْلِمِينَ,Alhamdulillahil ladzi athamana wa saqana wa jaalana minal muslimin,Segala puji bagi Allah yang telah memberi kami makan dan minum serta menjadikan kami muslim,H.R. Abu Dawud,makan,2,TRUE
-prayer_003,Doa Sebelum Tidur,بِاسْمِكَ اللَّهُمَّ أَحْيَا وَأَمُوتُ,Bismikallahumma ahya wa amuutu,Dengan nama-Mu ya Allah aku hidup dan aku mati,H.R. Bukhari,tidur,3,TRUE
-prayer_004,Doa Bangun Tidur,الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ,Alhamdulillahil ladzi ahyana bada ma amatana wa ilaihin nusyur,Segala puji bagi Allah yang menghidupkan kami setelah mematikan kami dan kepada-Nya kami dibangkitkan,H.R. Bukhari,tidur,4,TRUE
-prayer_005,Doa Masuk Rumah,اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ الْمَوْلِجِ وَخَيْرَ الْمَخْرَجِ,Bismillahi walajna wa bismillahi kharajna wa alallahi rabbina tawakkalna,Ya Allah aku memohon kebaikan ketika masuk dan keluar rumah dan kepada-Mu kami bertawakal,H.R. Abu Dawud,rumah,5,TRUE
+DOA001,Doa Sebelum Makan,اَللّٰهُمَّ بَارِكْ لَنَا فِيْمَا رَزَقْتَنَا,allahumma barik lana fiima razaqtana,Ya Allah berkahilah rezeki yang Engkau berikan kepada kami,HR. Tirmidzi,makan,1,TRUE
+DOA002,Doa Sesudah Makan,اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَطْعَمَنَا,alhamdulillahil ladzii ath-amanaa,Segala puji bagi Allah yang telah memberi kami makan,HR. Abu Dawud,makan,2,TRUE
+DOA003,Doa Sebelum Tidur,بِاسْمِكَ اللّٰهُمَّ أَحْيَا وَأَمُوْتُ,bismika allahumma ahyaa wa amuut,Dengan nama-Mu Ya Allah aku hidup dan aku mati,HR. Bukhari,tidur,3,TRUE
+DOA004,Doa Bangun Tidur,اَلْحَمْدُ لِلّٰهِ الَّذِيْ أَحْيَانَا,alhamdulillahil ladzii ahyaanaa,Segala puji bagi Allah yang menghidupkan kami kembali,HR. Bukhari,tidur,4,TRUE
+DOA005,Doa Masuk Kamar Mandi,اَللّٰهُمَّ إِنِّيْ أَعُوْذُ بِكَ مِنَ الْخُبُثِ,allahumma innii a-uudzu bika minal khubutsi,Ya Allah aku berlindung kepada-Mu dari gangguan setan laki laki dan perempuan,HR. Bukhari,toilet,5,TRUE
+DOA006,Doa Keluar Kamar Mandi,غُفْرَانَكَ,ghufraanaka,Aku memohon ampunan-Mu,HR. Tirmidzi,toilet,6,TRUE
+DOA007,Doa Keluar Rumah,بِسْمِ اللّٰهِ تَوَكَّلْتُ عَلَى اللّٰهِ,bismillah tawakkaltu alallah,Dengan nama Allah aku bertawakal kepada Allah,HR. Abu Dawud,rumah,7,TRUE
+DOA008,Doa Masuk Rumah,اَللّٰهُمَّ إِنِّيْ أَسْأَلُكَ خَيْرَ الْمَوْلَجِ,allahumma innii as-aluka khairal maulaji,Ya Allah aku memohon kebaikan saat masuk rumah,HR. Abu Dawud,rumah,8,TRUE
+DOA009,Doa Sebelum Belajar,رَبِّ زِدْنِي عِلْمًا,rabbi zidnii ilman,Ya Tuhanku tambahkanlah ilmu kepadaku,QS. Taha 114,belajar,9,TRUE
+DOA010,Doa Sesudah Belajar,اَللّٰهُمَّ انْفَعْنَا بِمَا عَلَّمْتَنَا,allahumma anfa'naa bimaa 'allamtanaa,Ya Allah berikan manfaat dari ilmu yang Engkau ajarkan,Doa Ulama,belajar,10,TRUE
+DOA011,Doa Bercermin,اَللّٰهُمَّ كَمَا حَسَّنْتَ خَلْقِيْ فَحَسِّنْ خُلُقِيْ,allahumma kama hassanta khalqii fahassin khuluqii,Ya Allah sebagaimana Engkau baguskan rupaku maka baguskan juga akhlakku,HR. Ahmad,adab,11,TRUE
+DOA012,Doa Naik Kendaraan,سُبْحَانَ الَّذِيْ سَخَّرَ لَنَا هٰذَا,subhanalladzii sakhkhara lanaa haadzaa,Maha Suci Allah yang menundukkan kendaraan ini untuk kami,QS. Az-Zukhruf 13,kendaraan,12,TRUE

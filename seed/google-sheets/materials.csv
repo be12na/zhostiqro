@@ -1,9 +1,69 @@
 material_id,category_id,title,subtitle,content_arab,content_latin,content_translation,lesson_type,level_name,image_url,audio_url,page_number,sort_order,is_featured,is_active
-mat_iqro1_001,cat_iqro_1,Huruf Alif Ba Ta,Pengenalan huruf awal,ا ب ت,Alif Ba Ta,Pengenalan tiga huruf hijaiyah pertama,iqro,Pemula,,,1,1,TRUE,TRUE
-mat_iqro1_002,cat_iqro_1,Huruf Tsa Jim Ha,Lanjutan huruf awal,ث ج ح,Tsa Jim Ha,Pengenalan tiga huruf hijaiyah lanjutan,iqro,Pemula,,,2,2,FALSE,TRUE
-mat_iqro2_001,cat_iqro_2,Harakat Fathah,Bacaan bunyi a,بَ تَ ثَ,Ba Ta Tsa,Dasar membaca huruf dengan fathah,iqro,Dasar,,,3,1,TRUE,TRUE
-mat_iqro3_001,cat_iqro_3,Tanwin Fathah,Dasar bunyi an,بً تً ثً,Ban Tan Tsan,Dasar membaca tanwin fathah,iqro,Menengah,,,4,1,FALSE,TRUE
-mat_iqro4_001,cat_iqro_4,Bacaan Sukun,Dasar huruf mati,اَبْتَ,Abta,Latihan membaca huruf dengan sukun,iqro,Menengah,,,5,1,FALSE,TRUE
-mat_iqro5_001,cat_iqro_5,Latihan Mad Thobii,Dasar panjang dua harakat,قَالَ وَقِيلَ,Qoola Wa Qiila,Latihan bacaan mad dasar dua harakat,iqro,Lanjutan,,,6,1,TRUE,TRUE
-mat_iqro6_001,cat_iqro_6,Latihan Ayat Pendek,Membaca ayat sederhana,بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ,Bismillahirrohmanirrohim,Latihan membaca ayat pendek dengan tartil,iqro,Lanjutan,,,7,1,TRUE,TRUE
-mat_hij_001,cat_hijaiyah,Huruf Hijaiyah Lengkap,Daftar 28 huruf,ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن و ه ي,Alif Ba Ta Tsa Jim Ha Kha Dal Dzal Ro Za Sin Syin Shod Dhod Tho Zho Ain Ghoin Fa Qof Kaf Lam Mim Nun Wawu Ha Ya,Daftar huruf hijaiyah lengkap untuk hafalan,huruf,Pemula,,,1,1,TRUE,TRUE
+MAT001,CAT001,Huruf Fathah Alif,Ayo kenal bunyi a pada Alif,اَ,a,Baca Alif dengan bunyi a pendek,iqro,Iqro 1,,https://example.com/audio/mat001.mp3,1,1,TRUE,TRUE
+MAT002,CAT001,Huruf Fathah Ba,Latihan bunyi ba dasar,بَ,ba,Baca Ba berharakat fathah dengan jelas,iqro,Iqro 1,,,2,2,FALSE,TRUE
+MAT003,CAT001,Huruf Fathah Ta,Latihan bunyi ta dasar,تَ,ta,Baca Ta berharakat fathah dengan jelas,iqro,Iqro 1,,,3,3,FALSE,TRUE
+MAT004,CAT001,Huruf Fathah Tsa,Latihan bunyi tsa dasar,ثَ,tsa,Baca Tsa berharakat fathah dengan jelas,iqro,Iqro 1,,,4,4,FALSE,TRUE
+MAT005,CAT001,Huruf Fathah Jim,Latihan bunyi ja dasar,جَ,ja,Baca Jim berharakat fathah dengan jelas,iqro,Iqro 1,,,5,5,FALSE,TRUE
+MAT006,CAT001,Huruf Fathah Ha,Latihan bunyi ha dasar,حَ,ha,Baca Ha tipis berharakat fathah,iqro,Iqro 1,,,6,6,FALSE,TRUE
+MAT007,CAT001,Huruf Fathah Kha,Latihan bunyi kha dasar,خَ,kha,Baca Kha berharakat fathah dari tenggorokan,iqro,Iqro 1,,,7,7,FALSE,TRUE
+MAT008,CAT001,Latihan Fathah Dua Huruf,Gabungkan dua huruf berharakat fathah,بَ تَ,ba ta,Latihan membaca dua huruf pendek berurutan,latihan,Iqro 1,,,8,8,TRUE,TRUE
+MAT009,CAT001,Latihan Fathah Tiga Huruf,Gabungkan tiga huruf berharakat fathah,بَ تَ ثَ,ba ta tsa,Latihan membaca tiga huruf pendek berurutan,latihan,Iqro 1,,,9,9,FALSE,TRUE
+MAT010,CAT001,Evaluasi Fathah Iqro 1,Uji pemahaman materi Iqro 1,اَ بَ تَ ثَ,a ba ta tsa,Evaluasi sederhana bacaan fathah tahap awal,latihan,Iqro 1,,,10,10,TRUE,TRUE
+MAT011,CAT002,Sambung Ba Alif,Latihan sambung dua huruf dasar,بَا,baa,Baca sambungan Ba dan Alif dengan mad asli,iqro,Iqro 2,,,1,1,TRUE,TRUE
+MAT012,CAT002,Sambung Ta Alif,Latihan sambung dua huruf kedua,تَا,taa,Baca sambungan Ta dan Alif dengan panjang dua harakat,iqro,Iqro 2,,https://example.com/audio/mat012.mp3,2,2,FALSE,TRUE
+MAT013,CAT002,Mad Asli Huruf Ba,Pengenalan mad asli sederhana,بِي,bii,Baca Ba kasrah dengan Ya mati dua harakat,iqro,Iqro 2,,,3,3,FALSE,TRUE
+MAT014,CAT002,Mad Asli Huruf Jim,Pengenalan mad asli lanjutan,جُو,juu,Baca Jim dhammah dengan Wawu mati dua harakat,iqro,Iqro 2,,,4,4,FALSE,TRUE
+MAT015,CAT002,Latihan Sambung Tiga Huruf 1,Gabungkan tiga huruf sambung pertama,بَا تَا,bataa,Latihan sambung sederhana untuk pemula,latihan,Iqro 2,,,5,5,FALSE,TRUE
+MAT016,CAT002,Latihan Sambung Tiga Huruf 2,Gabungkan tiga huruf sambung kedua,تَا ثَا,taatsaa,Latihan kelancaran membaca sambung,latihan,Iqro 2,,,6,6,FALSE,TRUE
+MAT017,CAT002,Baca Kata Pendek Iqro 2,Latihan kata pendek sehari hari,بَاب,bab,Kenali bentuk kata pendek sederhana,latihan,Iqro 2,,,7,7,TRUE,TRUE
+MAT018,CAT002,Evaluasi Sambung dan Mad Iqro 2,Uji materi sambung dan mad asli,بَا تِي جُو,baa tii juu,Evaluasi penguasaan sambung dan panjang bacaan,latihan,Iqro 2,,,8,8,TRUE,TRUE
+MAT019,CAT003,Kasrah pada Ba,Latihan bunyi bi dasar,بِ,bi,Baca Ba dengan kasrah menjadi bi,iqro,Iqro 3,,,1,1,TRUE,TRUE
+MAT020,CAT003,Kasrah pada Ta,Latihan bunyi ti dasar,تِ,ti,Baca Ta dengan kasrah menjadi ti,iqro,Iqro 3,,,2,2,FALSE,TRUE
+MAT021,CAT003,Dhammah pada Jim,Latihan bunyi ju dasar,جُ,ju,Baca Jim dengan dhammah menjadi ju,iqro,Iqro 3,,,3,3,FALSE,TRUE
+MAT022,CAT003,Dhammah pada Dal,Latihan bunyi du dasar,دُ,du,Baca Dal dengan dhammah menjadi du,iqro,Iqro 3,,,4,4,FALSE,TRUE
+MAT023,CAT003,Mad Kasrah Ya Mati,Latihan mad dari kasrah,بِي,bii,Baca dua harakat pada pola kasrah ya mati,iqro,Iqro 3,,,5,5,FALSE,TRUE
+MAT024,CAT003,Mad Dhammah Wawu Mati,Latihan mad dari dhammah,تُو,tuu,Baca dua harakat pada pola dhammah wawu mati,iqro,Iqro 3,,,6,6,FALSE,TRUE
+MAT025,CAT003,Latihan Campuran Harakat Iqro 3,Campuran fathah kasrah dhammah,بَ بِ بُ,ba bi bu,Latihan berpindah harakat dengan lancar,latihan,Iqro 3,,,7,7,TRUE,TRUE
+MAT026,CAT003,Evaluasi Kasrah Dhammah dan Mad,Uji materi Iqro 3,بِي تُو جُ,bii tuu ju,Evaluasi penguasaan bacaan Iqro 3,latihan,Iqro 3,,,8,8,TRUE,TRUE
+MAT027,CAT004,Tanwin Fathatain Dasar,Pengenalan bunyi an,بً,ban,Baca tanwin fathah dengan suara an,tajwid,Iqro 4,,,1,1,TRUE,TRUE
+MAT028,CAT004,Tanwin Kasratain Dasar,Pengenalan bunyi in,بٍ,bin,Baca tanwin kasrah dengan suara in,tajwid,Iqro 4,,,2,2,FALSE,TRUE
+MAT029,CAT004,Tanwin Dammatain Dasar,Pengenalan bunyi un,بٌ,bun,Baca tanwin dhammah dengan suara un,tajwid,Iqro 4,,,3,3,FALSE,TRUE
+MAT030,CAT004,Sukun pada Akhir Kata,Latihan huruf mati,مِن,min,Baca nun sukun dengan jelas tanpa harakat,iqro,Iqro 4,,,4,4,FALSE,TRUE
+MAT031,CAT004,Nun Mati dan Idzhar Dasar,Latihan idzhar sederhana,مِنْ اٰيَة,min ayah,Baca nun mati jelas ketika bertemu huruf halqi,tajwid,Iqro 4,,,5,5,TRUE,TRUE
+MAT032,CAT004,Qolqolah Dasar Huruf Qaf,Latihan pantulan dasar,يَطْرُقُ,yathruqu,Baca huruf qolqolah dengan pantulan ringan,tajwid,Iqro 4,,,6,6,TRUE,TRUE
+MAT033,CAT005,Waqaf Dasar Akhir Ayat,Pengenalan berhenti yang benar,وَاللّٰهُ غَفُوْرٌ,wallahu ghafuur,Latihan berhenti pada akhir bacaan secara tenang,tajwid,Iqro 5,,,1,1,TRUE,TRUE
+MAT034,CAT005,Tasydid pada Huruf Lam,Latihan bacaan tasydid,اللّٰهُ,allahu,Baca huruf bertasydid dengan penekanan,iqro,Iqro 5,,,2,2,FALSE,TRUE
+MAT035,CAT005,Mad Wajib Muttasil Dasar,Pengenalan mad wajib sederhana,جَاءَ,jaa-a,Baca mad wajib lebih panjang dari mad asli,tajwid,Iqro 5,,,3,3,TRUE,TRUE
+MAT036,CAT005,Idzhar Halqi Dasar,Latihan idzhar halqi ringkas,مِنْ هُدًى,min hudan,Baca nun mati jelas saat bertemu huruf halqi,tajwid,Iqro 5,,,4,4,FALSE,TRUE
+MAT037,CAT005,Idgham Bighunnah Dasar,Latihan dengung sederhana,مِنْ نُوْرٍ,min nuurin,Baca nun mati masuk dengan dengung,tajwid,Iqro 5,,,5,5,FALSE,TRUE
+MAT038,CAT005,Mim Mati Ikhfa Syafawi Dasar,Latihan mim mati bertemu ba,تَرْمِيْهِمْ بِحِجَارَةٍ,tarmiihim bihijaarah,Baca mim mati samar dengan dengung ringan,tajwid,Iqro 5,,,6,6,TRUE,TRUE
+MAT039,CAT006,Iqlab pada Nun Mati,Latihan iqlab dasar,مِنْ بَعْدِمَا,min ba'dimaa,Baca nun mati berubah menjadi mim kecil saat bertemu ba,tajwid,Iqro 6,,,1,1,TRUE,TRUE
+MAT040,CAT006,Ikhfa pada Nun Mati,Latihan ikhfa dasar,مِنْ شَرِّ,min sharri,Baca nun mati samar dengan dengung sesuai huruf ikhfa,tajwid,Iqro 6,,,2,2,FALSE,TRUE
+MAT041,CAT006,Tanda Waqaf Mim,Kenali tanda wajib berhenti,مۡ,mim waqaf,Tanda mim menunjukkan wajib berhenti saat membaca,tajwid,Iqro 6,,https://example.com/audio/mat041.mp3,3,3,FALSE,TRUE
+MAT042,CAT006,Tanda Waqaf La,Kenali tanda tidak boleh berhenti,لَا,laa waqaf,Tanda laa menunjukkan tidak disarankan berhenti,tajwid,Iqro 6,,,4,4,FALSE,TRUE
+MAT043,CAT006,Huruf Awal Surat Alif Lam Mim,Latihan bacaan muqathaah,الٓمٓ,alif laam miim,Baca huruf awal surat sesuai kaidah bacaan khusus,tajwid,Iqro 6,,,5,5,TRUE,TRUE
+MAT044,CAT006,Latihan Variasi Waqaf Iqro 6,Latihan berhenti lanjut membaca,قلى ج,qalaa jiim,Latihan memahami tanda waqaf dasar di mushaf,latihan,Iqro 6,,,6,6,TRUE,TRUE
+MAT045,CAT007,Pengenalan Huruf Alif,Huruf hijaiyah pertama,ا,alif,Kenali bentuk dan bunyi dasar huruf Alif,hijaiyah,Dasar,,,1,1,TRUE,TRUE
+MAT046,CAT007,Pengenalan Huruf Ba,Huruf hijaiyah kedua,ب,ba,Kenali titik satu di bawah untuk huruf Ba,hijaiyah,Dasar,,,2,2,FALSE,TRUE
+MAT047,CAT007,Pengenalan Huruf Ta,Huruf hijaiyah ketiga,ت,ta,Kenali dua titik di atas untuk huruf Ta,hijaiyah,Dasar,,,3,3,FALSE,TRUE
+MAT048,CAT007,Pengenalan Huruf Tsa,Huruf hijaiyah keempat,ث,tsa,Kenali tiga titik di atas untuk huruf Tsa,hijaiyah,Dasar,,,4,4,FALSE,TRUE
+MAT049,CAT007,Pengenalan Huruf Jim,Huruf hijaiyah kelima,ج,jim,Kenali satu titik di bawah untuk huruf Jim,hijaiyah,Dasar,,,5,5,FALSE,TRUE
+MAT050,CAT007,Pengenalan Huruf Ha,Huruf hijaiyah keenam,ح,ha,Kenali huruf Ha tanpa titik dan suara tenggorokan,hijaiyah,Dasar,,,6,6,FALSE,TRUE
+MAT051,CAT007,Pengenalan Huruf Kha,Huruf hijaiyah ketujuh,خ,kha,Kenali huruf Kha dengan satu titik di atas,hijaiyah,Dasar,,,7,7,FALSE,TRUE
+MAT052,CAT007,Pengenalan Huruf Dal,Huruf hijaiyah kedelapan,د,dal,Kenali huruf Dal bentuk pendek tanpa titik,hijaiyah,Dasar,,,8,8,FALSE,TRUE
+MAT053,CAT007,Pengenalan Huruf Dzal,Huruf hijaiyah kesembilan,ذ,dzal,Kenali huruf Dzal dengan satu titik di atas,hijaiyah,Dasar,,,9,9,FALSE,TRUE
+MAT054,CAT007,Pengenalan Huruf Ra,Huruf hijaiyah kesepuluh,ر,ra,Kenali huruf Ra dengan lengkung sederhana,hijaiyah,Dasar,,,10,10,FALSE,TRUE
+MAT055,CAT007,Pengenalan Huruf Zai,Huruf hijaiyah kesebelas,ز,zai,Kenali huruf Zai dengan satu titik di atas,hijaiyah,Dasar,,,11,11,FALSE,TRUE
+MAT056,CAT007,Pengenalan Huruf Sin,Huruf hijaiyah kedua belas,س,sin,Kenali huruf Sin dengan tiga gigi,hijaiyah,Dasar,,,12,12,FALSE,TRUE
+MAT057,CAT007,Pengenalan Huruf Syin,Huruf hijaiyah ketiga belas,ش,syin,Kenali huruf Syin dengan tiga titik di atas,hijaiyah,Dasar,,,13,13,FALSE,TRUE
+MAT058,CAT007,Pengenalan Huruf Shad,Huruf hijaiyah keempat belas,ص,shad,Kenali huruf Shad tebal tanpa titik,hijaiyah,Dasar,,,14,14,FALSE,TRUE
+MAT059,CAT007,Pengenalan Huruf Dhad,Huruf hijaiyah kelima belas,ض,dhad,Kenali huruf Dhad tebal dengan titik di atas,hijaiyah,Dasar,,,15,15,TRUE,TRUE
+MAT060,CAT008,Adab Berdoa Sebelum Belajar,Kenali niat sebelum belajar,رَبِّ زِدْنِي عِلْمًا,rabbi zidnii ilman,Biasakan membaca doa sebelum mulai belajar,latihan,Doa Harian,,,1,1,TRUE,TRUE
+MAT061,CAT008,Adab Berdoa Setelah Belajar,Syukur setelah selesai belajar,الْحَمْدُ لِلّٰهِ,alhamdulillah,Ajarkan anak bersyukur setelah belajar,latihan,Doa Harian,,,2,2,FALSE,TRUE
+MAT062,CAT008,Latihan Hafalan Doa Pilihan,Latihan doa harian singkat,اَللّٰهُمَّ اِنِّيْ اَسْأَلُكَ خَيْرًا,allahumma innii as-aluka khairan,Latihan pengulangan doa mudah untuk pemula,latihan,Doa Harian,,,3,3,FALSE,TRUE
+MAT063,CAT009,Pengenalan Surat Al-Fatihah,Latihan bacaan pembuka Al-Quran,بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيْمِ,bismillahir rahmanir rahim,Awali membaca Al-Quran dengan Al-Fatihah,tajwid,Al-Quran,,https://example.com/audio/mat063.mp3,1,1,TRUE,TRUE
+MAT064,CAT009,Pengenalan Surat Al-Ikhlas,Latihan bacaan tauhid ringkas,قُلْ هُوَ اللَّهُ أَحَدٌ,qul huwallahu ahad,Kenali surat pendek tentang keesaan Allah,tajwid,Al-Quran,,,2,2,FALSE,TRUE
+MAT065,CAT009,Latihan Membaca Surat Pendek Pilihan,Latihan lancar surat pendek,قُلْ أَعُوذُ بِرَبِّ النَّاسِ,qul a-uudzu birabbin naas,Latihan kelancaran membaca surat pendek pilihan,latihan,Al-Quran,,,3,3,TRUE,TRUE
+MAT066,CAT010,Pengenalan Zikir Pagi Ringkas,Awali pagi dengan zikir,سُبْحَانَ اللّٰهِ,subhanallah,Ajarkan zikir pendek saat pagi hari,latihan,Zikir,,,1,1,TRUE,TRUE
+MAT067,CAT010,Pengenalan Zikir Petang Ringkas,Tutup hari dengan zikir,اَلْحَمْدُ لِلّٰهِ,alhamdulillah,Ajarkan zikir pendek saat petang hari,latihan,Zikir,,,2,2,FALSE,TRUE
+MAT068,CAT010,Latihan Hitung Ulangan Zikir,Latihan menghitung zikir harian,اللّٰهُ أَكْبَرُ,allahu akbar,Latihan menjaga hitungan zikir 33 kali,latihan,Zikir,,,3,3,FALSE,TRUE

@@ -1,11 +1,11 @@
 category_id,category_name,category_slug,description,icon_name,sort_order,is_active
-cat_iqro_1,Iqro 1,iqro-1,Pengenalan huruf hijaiyah dasar,book-open,1,TRUE
-cat_iqro_2,Iqro 2,iqro-2,Latihan harakat dasar,book-open,2,TRUE
-cat_iqro_3,Iqro 3,iqro-3,Latihan tanwin dan bacaan sederhana,book-open,3,TRUE
-cat_iqro_4,Iqro 4,iqro-4,Latihan sukun dan tasydid,book-open,4,TRUE
-cat_iqro_5,Iqro 5,iqro-5,Latihan mad dan tajwid dasar,book-open,5,TRUE
-cat_iqro_6,Iqro 6,iqro-6,Latihan membaca ayat pendek,book-open,6,TRUE
-cat_hijaiyah,Huruf Hijaiyah,huruf-hijaiyah,Daftar huruf hijaiyah dan makhraj sederhana,alphabet,7,TRUE
-cat_doa,Doa Harian,doa-harian,Kumpulan doa harian pilihan,prayer,8,TRUE
-cat_quran,Al-Quran,al-quran,Daftar surat pendek untuk latihan,book-quran,9,TRUE
-cat_dzikir,Zikir Pagi Petang,zikir-pagi-petang,Kumpulan zikir pagi dan petang,hand,10,TRUE
+CAT001,Iqro 1,iqro-1,Pengenalan bacaan dasar berharakat fathah,menu_book,1,TRUE
+CAT002,Iqro 2,iqro-2,Latihan huruf sambung dan mad asli dasar,auto_stories,2,TRUE
+CAT003,Iqro 3,iqro-3,Pendalaman kasrah dhammah dan mad sederhana,library_books,3,TRUE
+CAT004,Iqro 4,iqro-4,Latihan tanwin sukun nun mati dan qolqolah dasar,school,4,TRUE
+CAT005,Iqro 5,iqro-5,Pendalaman waqaf tasydid mad wajib idzhar idgham dan mim mati,import_contacts,5,TRUE
+CAT006,Iqro 6,iqro-6,Tahap akhir iqlab ikhfa tanda waqaf dan latihan lanjutan,workspace_premium,6,TRUE
+CAT007,Huruf Hijaiyah,huruf-hijaiyah,Pengenalan huruf hijaiyah dasar untuk pemula,text_fields,7,TRUE
+CAT008,Doa Harian,doa-harian,Kumpulan doa singkat untuk kegiatan sehari hari,volunteer_activism,8,TRUE
+CAT009,Al-Quran,al-quran,Latihan membaca surat pendek pilihan,menu_book,9,TRUE
+CAT010,Zikir Pagi Petang,zikir-pagi-petang,Zikir ringkas untuk pagi dan petang,wb_sunny,10,TRUE
