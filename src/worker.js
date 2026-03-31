@@ -1,4 +1,3 @@
-import { createApiHandlers } from './lib/api.js';
 import { createJsonResponse, errorJsonResponse, toJsonResponse } from './lib/response.js';
 
 const ROUTE_TO_HANDLER = {
@@ -27,14 +26,14 @@ export default {
     }
 
     if (url.pathname.startsWith('/api/')) {
-      return handleApiRequest(request, env, ctx, url);
+      return handleApiRequest(request, env, url);
     }
 
     return serveStaticAsset(request, env);
   }
 };
 
-async function handleApiRequest(request, env, ctx, url) {
+async function handleApiRequest(request, env, url) {
   if (request.method !== 'GET') {
     return errorJsonResponse('Method tidak diizinkan. Gunakan GET.', 405);
   }
@@ -50,40 +49,15 @@ async function handleApiRequest(request, env, ctx, url) {
     paramObject[name] = paramValues[index] || '';
   });
 
-  if (env.APPS_SCRIPT_WEB_APP_URL) {
-    const requireAppsScriptProxy = isTruthy(env.REQUIRE_APPS_SCRIPT_PROXY);
-    const proxyPayload = await proxyToAppsScript(route.fn, paramObject, env);
-    if (proxyPayload && proxyPayload.success === true) {
-      return toJsonResponse(proxyPayload, 200);
-    }
-
-    if (requireAppsScriptProxy) {
-      return toJsonResponse(
-        proxyPayload || createJsonResponse(false, 'Gagal sinkron ke Apps Script.', null),
-        502
-      );
-    }
+  if (!env.APPS_SCRIPT_WEB_APP_URL) {
+    return errorJsonResponse('APPS_SCRIPT_WEB_APP_URL wajib diatur untuk mode sinkronisasi Apps Script.', 500);
   }
 
-  const handlers = createApiHandlers(env, ctx);
-  const handler = handlers[route.fn];
-
-  if (typeof handler !== 'function') {
-    return errorJsonResponse('Handler API tidak tersedia.', 500);
-  }
-
-  const payload = await handler(...paramValues);
-
-  return toJsonResponse(payload, 200);
-}
-
-function isTruthy(value) {
-  if (typeof value === 'boolean') return value;
-  if (typeof value === 'number') return value === 1;
-  if (typeof value !== 'string') return false;
-
-  const normalized = value.trim().toLowerCase();
-  return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on';
+  const proxyPayload = await proxyToAppsScript(route.fn, paramObject, env);
+  return toJsonResponse(
+    proxyPayload || createJsonResponse(false, 'Gagal sinkron ke Apps Script.', null),
+    proxyPayload?.success ? 200 : 502
+  );
 }
 
 async function proxyToAppsScript(action, params, env) {

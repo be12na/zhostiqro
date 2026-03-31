@@ -1,5 +1,4 @@
 SPREADSHEET_ID=1WwrgXMq3KMb7FovwGHgjIzSMden1hgqT7bHf55WzTnQ
-GOOGLE_SHEETS_API_KEY=your_google_sheets_api_key
 APP_NAME=Aplikasi Buku Iqro 1-6 Lengkap
 SHEETS_CACHE_TTL=300
 APPS_SCRIPT_WEB_APP_URL=https://script.google.com/macros/s/AKfycbys4jJPffF0zqCZDGp-mXSwkF25DGxBrPVC9p-zeWKocK8wdA5vys-lTxUa5G3cCxOuRw/exec

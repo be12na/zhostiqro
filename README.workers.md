@@ -6,8 +6,8 @@
 src/
   worker.js            # Worker entry point + routing
   lib/
-    api.js             # Business handlers (API contract tetap)
-    sheets.js          # Google Sheets adapter via HTTP API
+    api.js             # Business handlers (legacy fallback, tidak dipakai jalur utama)
+    sheets.js          # Legacy adapter Google Sheets API (tidak dipakai jalur utama)
     utils.js           # Filter/sort/validation helpers
     response.js        # JSON response helpers
     constants.js       # Sheet names
@@ -33,15 +33,11 @@ cp .dev.vars.example .dev.vars
 
 Set variable biasa di dashboard/wrangler:
 
-- `SPREADSHEET_ID`
 - `APP_NAME` (opsional)
 - `SHEETS_CACHE_TTL` (opsional, default 300)
+- `APPS_SCRIPT_WEB_APP_URL` (wajib, endpoint Web App Apps Script)
 
-Set secret untuk API key:
-
-```bash
-wrangler secret put GOOGLE_SHEETS_API_KEY
-```
+Mode produksi ini memakai jalur **Apps Script Web App** untuk sinkronisasi ke Google Sheets (tanpa direct Google Sheets API key).
 
 ## 3) Commands
 
