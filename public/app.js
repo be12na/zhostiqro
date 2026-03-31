@@ -1,10 +1,17 @@
+const STORAGE_KEYS = {
+  USERNAME: 'iqro_app_username'
+};
+
 const APP_STATE = {
   config: {},
   categories: [],
   selectedCategory: null,
   selectedMaterialId: null,
   selectedSurah: null,
-  dzikirType: ''
+  dzikirType: '',
+  username: '',
+  completedMaterialMap: {},
+  progressItems: []
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,6 +64,11 @@ function handleAction(target) {
     return;
   }
   if (action === 'open-material') {
+    const categoryId = target.getAttribute('data-category-id') || '';
+    const categoryName = target.getAttribute('data-category-name') || '';
+    if (categoryId) {
+      APP_STATE.selectedCategory = { id: categoryId, name: categoryName || getCategoryNameById(categoryId) };
+    }
     loadMaterialDetail(target.getAttribute('data-material-id') || '');
     return;
   }
@@ -69,6 +81,27 @@ function handleAction(target) {
   }
   if (action === 'back-materials') {
     loadMaterialsByCategory(
+      target.getAttribute('data-category-id') || '',
+      target.getAttribute('data-category-name') || ''
+    );
+    return;
+  }
+  if (action === 'save-username') {
+    saveUsernameProfile();
+    return;
+  }
+  if (action === 'search-materials') {
+    runMaterialSearch();
+    return;
+  }
+  if (action === 'reset-search') {
+    renderHome();
+    return;
+  }
+  if (action === 'mark-material-complete') {
+    markMaterialAsCompleted(
+      target.getAttribute('data-material-id') || '',
+      target.getAttribute('data-material-title') || '',
       target.getAttribute('data-category-id') || '',
       target.getAttribute('data-category-name') || ''
     );
@@ -91,23 +124,59 @@ async function callApi(endpoint, params = {}) {
   });
 
   const payload = await response.json();
-  if (!response.ok && !payload?.message) {
+  if (!response.ok && !(payload && payload.message)) {
     throw new Error(`Request gagal (${response.status})`);
   }
   return payload;
+}
+
+async function apiGetAppConfig() {
+  return callApi('getAppConfig');
+}
+
+async function apiGetCategories() {
+  return callApi('getCategories');
+}
+
+async function apiGetMaterialsByCategory(categoryId) {
+  return callApi('getMaterialsByCategory', { categoryId });
+}
+
+async function apiGetMaterialById(materialId) {
+  return callApi('getMaterialById', { materialId });
+}
+
+async function apiSearchMaterials(searchTitle, categoryId) {
+  return callApi('searchMaterials', { searchTitle, categoryId });
+}
+
+async function apiGetLearningProgress(username) {
+  return callApi('getLearningProgress', { username });
+}
+
+async function apiSaveLearningProgress(payload) {
+  return callApi('saveLearningProgress', {
+    username: payload.username,
+    materialId: payload.materialId,
+    materialTitle: payload.materialTitle,
+    categoryId: payload.categoryId,
+    categoryName: payload.categoryName
+  });
 }
 
 async function initApp() {
   showLoading('Memuat beranda...');
 
   try {
-    const [configResponse, categoriesResponse] = await Promise.all([
-      callApi('getAppConfig'),
-      callApi('getCategories')
-    ]);
+    const [configResponse, categoriesResponse] = await Promise.all([apiGetAppConfig(), apiGetCategories()]);
 
     if (configResponse.success) APP_STATE.config = configResponse.data || {};
     if (categoriesResponse.success) APP_STATE.categories = categoriesResponse.data || [];
+
+    APP_STATE.username = loadStoredUsername();
+    if (APP_STATE.username) {
+      await syncProgressForCurrentUser({ silent: true });
+    }
 
     renderHeaderFromConfig();
     renderHome();
@@ -118,7 +187,8 @@ async function initApp() {
 
 function renderHeaderFromConfig() {
   const title = APP_STATE.config.app_name || 'Aplikasi Buku Iqro 1-6 Lengkap';
-  const description = APP_STATE.config.app_description || 'Belajar mengaji dengan materi terstruktur dan mudah dipahami.';
+  const description =
+    APP_STATE.config.app_description || 'Belajar mengaji dengan materi terstruktur dan mudah dipahami.';
 
   document.getElementById('appTitle').textContent = title;
   document.getElementById('appDescription').textContent = description;
@@ -129,7 +199,11 @@ function showLoading(message) {
 }
 
 function showError(message) {
-  setMain(`<section class="card"><p><strong>Terjadi kesalahan.</strong></p><p class="muted">${escapeHtml(message)}</p></section>`);
+  setMain(
+    `<section class="card"><p><strong>Terjadi kesalahan.</strong></p><p class="muted">${escapeHtml(
+      message || 'Tidak diketahui'
+    )}</p></section>`
+  );
 }
 
 function setMain(html) {
@@ -141,11 +215,45 @@ function renderHome() {
   APP_STATE.selectedMaterialId = null;
   APP_STATE.selectedSurah = null;
 
+  const completedCount = Object.keys(APP_STATE.completedMaterialMap).length;
+
   let html = '';
-  html += '<section class="card">';
-  html += '<h2>Daftar Kategori Utama</h2>';
-  html += '<p class="muted">Pilih kategori untuk melihat materi belajar.</p>';
+  html += '<section class="card hero-card">';
+  html += '<h2>Belajar Mengaji Lebih Seru ✨</h2>';
+  html += '<p class="muted">Pilih kategori materi, cari pelajaran cepat, lalu tandai jika sudah selesai.</p>';
+  html += `<div class="status-pill">Progres selesai: <strong>${escapeHtml(String(completedCount))}</strong> materi</div>`;
   html += '</section>';
+
+  html += '<section class="card profile-box">';
+  html += '<h3>Profil Belajar (tanpa login)</h3>';
+  html += '<p class="muted">Nama ini dipakai untuk menyimpan progres ke Google Sheets.</p>';
+  html += '<div class="form-row">';
+  html += `<input id="usernameInput" class="field-control" type="text" placeholder="Contoh: Aisyah" value="${escapeAttr(APP_STATE.username || '')}" />`;
+  html += '<button type="button" class="btn btn-primary" data-action="save-username">Simpan Nama</button>';
+  html += '</div>';
+  html += '</section>';
+
+  html += '<section class="card search-card">';
+  html += '<h3>Cari Materi</h3>';
+  html += '<p class="muted">Filter berdasarkan judul dan kategori agar belajar lebih cepat.</p>';
+  html += '<div class="form-grid">';
+  html += '<input id="searchTitleInput" class="field-control" type="text" placeholder="Cari judul materi..." />';
+  html += '<select id="searchCategoryInput" class="field-control">';
+  html += '<option value="">Semua kategori</option>';
+  APP_STATE.categories.forEach((category) => {
+    html += `<option value="${escapeAttr(String(category.category_id || ''))}">${escapeHtml(
+      category.category_name || '-'
+    )}</option>`;
+  });
+  html += '</select>';
+  html += '</div>';
+  html += '<div class="form-row">';
+  html += '<button type="button" class="btn btn-primary" data-action="search-materials">Cari Materi</button>';
+  html += '<button type="button" class="btn" data-action="reset-search">Reset</button>';
+  html += '</div>';
+  html += '</section>';
+
+  html += '<section class="section-header"><h3>Kategori Utama</h3></section>';
 
   if (!APP_STATE.categories.length) {
     html += '<div class="card empty">Belum ada kategori aktif.</div>';
@@ -153,17 +261,20 @@ function renderHome() {
     return;
   }
 
-  html += '<section class="grid">';
+  html += '<section class="category-grid">';
   APP_STATE.categories.forEach((category) => {
     const categoryId = escapeAttr(String(category.category_id || ''));
     const categoryName = escapeAttr(String(category.category_name || ''));
 
     html += '<article class="card category-card">';
+    html += `<div class="category-icon">${escapeHtml(pickCategoryEmoji(category.category_name || 'Kategori'))}</div>`;
     html += `<h3>${escapeHtml(category.category_name || '-')}</h3>`;
-    if (category.description) {
-      html += `<p class="muted">${escapeHtml(category.description)}</p>`;
-    }
+    html += `<p class="muted">${escapeHtml(
+      category.description || 'Materi disusun ringan, bertahap, dan mudah dipahami anak.'
+    )}</p>`;
+    html += '<div class="category-foot">';
     html += `<button type="button" class="btn btn-primary" data-action="open-category" data-category-id="${categoryId}" data-category-name="${categoryName}">Lihat Materi</button>`;
+    html += '</div>';
     html += '</article>';
   });
   html += '</section>';
@@ -171,12 +282,125 @@ function renderHome() {
   setMain(html);
 }
 
+async function saveUsernameProfile() {
+  const input = document.getElementById('usernameInput');
+  const username = String((input && input.value) || '').trim();
+
+  if (!username) {
+    showError('Nama pengguna belum diisi. Isi dulu agar progres bisa disimpan.');
+    return;
+  }
+
+  APP_STATE.username = username;
+  localStorage.setItem(STORAGE_KEYS.USERNAME, username);
+
+  await syncProgressForCurrentUser({ silent: true });
+  renderHome();
+}
+
+async function syncProgressForCurrentUser(options) {
+  const silent = options && options.silent;
+  const username = String(APP_STATE.username || '').trim();
+
+  if (!username) {
+    APP_STATE.completedMaterialMap = {};
+    APP_STATE.progressItems = [];
+    return;
+  }
+
+  try {
+    const response = await apiGetLearningProgress(username);
+    if (!response.success) {
+      if (!silent) {
+        showError(response.message || 'Gagal mengambil progres belajar.');
+      }
+      return;
+    }
+
+    const payload = response.data || {};
+    const completedIds = Array.isArray(payload.completed_material_ids) ? payload.completed_material_ids : [];
+
+    const map = {};
+    completedIds.forEach((id) => {
+      map[String(id)] = true;
+    });
+
+    APP_STATE.completedMaterialMap = map;
+    APP_STATE.progressItems = Array.isArray(payload.items) ? payload.items : [];
+  } catch (error) {
+    if (!silent) {
+      showError(`Gagal sinkron progres: ${error.message}`);
+    }
+  }
+}
+
+async function runMaterialSearch() {
+  const titleInput = document.getElementById('searchTitleInput');
+  const categoryInput = document.getElementById('searchCategoryInput');
+
+  const searchTitle = String((titleInput && titleInput.value) || '').trim();
+  const categoryId = String((categoryInput && categoryInput.value) || '').trim();
+
+  await loadMaterialSearchResults(searchTitle, categoryId);
+}
+
+async function loadMaterialSearchResults(searchTitle, categoryId) {
+  showLoading('Mencari materi...');
+
+  try {
+    const response = await apiSearchMaterials(searchTitle, categoryId);
+    if (!response.success) {
+      showError(response.message || 'Gagal mencari materi.');
+      return;
+    }
+
+    const materials = response.data || [];
+    let html = '<section class="card">';
+    html += '<button type="button" class="btn" data-action="go-home">← Kembali</button>';
+    html += '<h2>Hasil Pencarian Materi</h2>';
+    html += '<p class="muted">Filter judul dan kategori dengan JavaScript sederhana tanpa framework.</p>';
+    html += '</section>';
+
+    if (!materials.length) {
+      html += '<div class="card empty">Tidak ada materi yang cocok dengan filter pencarian.</div>';
+      setMain(html);
+      return;
+    }
+
+    html += '<section class="grid">';
+    materials.forEach((item) => {
+      const materialId = String(item.material_id || '');
+      const categoryName = item.category_name || getCategoryNameById(item.category_id);
+
+      html += '<article class="card material-card">';
+      html += `<span class="meta">Kategori: ${escapeHtml(categoryName || '-')}</span>`;
+      html += `<span class="meta">Level: ${escapeHtml(String(item.level_name || '-'))}</span>`;
+      html += getMaterialCompleteBadge(materialId);
+      html += `<h3>${escapeHtml(item.title || '-')}</h3>`;
+      if (item.subtitle) {
+        html += `<p class="muted">${escapeHtml(item.subtitle)}</p>`;
+      }
+      html += `<button type="button" class="btn btn-primary" data-action="open-material" data-material-id="${escapeAttr(
+        materialId
+      )}" data-category-id="${escapeAttr(String(item.category_id || ''))}" data-category-name="${escapeAttr(
+        String(categoryName || '')
+      )}">Buka Detail</button>`;
+      html += '</article>';
+    });
+    html += '</section>';
+
+    setMain(html);
+  } catch (error) {
+    showError(`Gagal mencari materi: ${error.message}`);
+  }
+}
+
 async function loadMaterialsByCategory(categoryId, categoryName) {
   APP_STATE.selectedCategory = { id: categoryId, name: categoryName };
   showLoading('Memuat daftar materi...');
 
   try {
-    const response = await callApi('getMaterialsByCategory', { categoryId });
+    const response = await apiGetMaterialsByCategory(categoryId);
     if (!response.success) {
       showError(response.message || 'Gagal memuat materi.');
       return;
@@ -186,7 +410,7 @@ async function loadMaterialsByCategory(categoryId, categoryName) {
     let html = '<section class="card">';
     html += '<button type="button" class="btn" data-action="go-home">← Kembali</button>';
     html += `<h2>Materi: ${escapeHtml(categoryName || '-')}</h2>`;
-    html += '<p class="muted">Hanya menampilkan materi aktif sesuai urutan.</p>';
+    html += '<p class="muted">Tandai materi yang selesai agar progres tersimpan ke Google Sheets.</p>';
     html += '</section>';
 
     if (!materials.length) {
@@ -197,14 +421,21 @@ async function loadMaterialsByCategory(categoryId, categoryName) {
 
     html += '<section class="grid">';
     materials.forEach((item) => {
+      const materialId = String(item.material_id || '');
+
       html += '<article class="card material-card">';
       html += `<span class="meta">Urutan: ${escapeHtml(String(item.sort_order || '-'))}</span>`;
       html += `<span class="meta">Level: ${escapeHtml(String(item.level_name || '-'))}</span>`;
+      html += getMaterialCompleteBadge(materialId);
       html += `<h3>${escapeHtml(item.title || '-')}</h3>`;
       if (item.subtitle) {
         html += `<p class="muted">${escapeHtml(item.subtitle)}</p>`;
       }
-      html += `<button type="button" class="btn btn-primary" data-action="open-material" data-material-id="${escapeAttr(String(item.material_id || ''))}">Buka Detail</button>`;
+      html += `<button type="button" class="btn btn-primary" data-action="open-material" data-material-id="${escapeAttr(
+        materialId
+      )}" data-category-id="${escapeAttr(String(categoryId || ''))}" data-category-name="${escapeAttr(
+        String(categoryName || '')
+      )}">Buka Detail</button>`;
       html += '</article>';
     });
     html += '</section>';
@@ -220,23 +451,43 @@ async function loadMaterialDetail(materialId) {
   showLoading('Memuat detail materi...');
 
   try {
-    const response = await callApi('getMaterialById', { materialId });
+    const response = await apiGetMaterialById(materialId);
     if (!response.success || !response.data) {
       showError(response.message || 'Detail materi tidak ditemukan.');
       return;
     }
 
     const item = response.data;
-    const backCategoryId = APP_STATE.selectedCategory ? APP_STATE.selectedCategory.id : item.category_id;
-    const backCategoryName = APP_STATE.selectedCategory ? APP_STATE.selectedCategory.name : 'Kategori';
+    const categoryId = APP_STATE.selectedCategory ? APP_STATE.selectedCategory.id : String(item.category_id || '');
+    const categoryName = APP_STATE.selectedCategory
+      ? APP_STATE.selectedCategory.name
+      : getCategoryNameById(item.category_id) || 'Kategori';
+    const isCompleted = isMaterialCompleted(materialId);
 
     let html = '<section class="card">';
-    html += `<button type="button" class="btn" data-action="back-materials" data-category-id="${escapeAttr(String(backCategoryId || ''))}" data-category-name="${escapeAttr(String(backCategoryName || 'Kategori'))}">← Kembali ke Daftar</button>`;
+    html += `<button type="button" class="btn" data-action="back-materials" data-category-id="${escapeAttr(
+      String(categoryId || '')
+    )}" data-category-name="${escapeAttr(String(categoryName || 'Kategori'))}">← Kembali ke Daftar</button>`;
     html += `<h2>${escapeHtml(item.title || '-')}</h2>`;
 
     if (item.subtitle) {
       html += `<p class="muted">${escapeHtml(item.subtitle)}</p>`;
     }
+
+    if (isCompleted) {
+      html += '<div class="completed-pill">✅ Materi ini sudah ditandai selesai.</div>';
+    }
+
+    html += '<div class="sticky-actions">';
+    html += `<button type="button" class="btn btn-primary" data-action="mark-material-complete" data-material-id="${escapeAttr(
+      String(item.material_id || materialId)
+    )}" data-material-title="${escapeAttr(String(item.title || ''))}" data-category-id="${escapeAttr(
+      String(categoryId || '')
+    )}" data-category-name="${escapeAttr(String(categoryName || ''))}" ${isCompleted ? 'disabled' : ''}>${
+      isCompleted ? 'Sudah Selesai' : 'Tandai Selesai'
+    }</button>`;
+    html += '</div>';
+
     if (item.content_arab) {
       html += `<div class="detail-arab">${escapeHtml(item.content_arab)}</div>`;
     }
@@ -244,19 +495,58 @@ async function loadMaterialDetail(materialId) {
       html += `<p class="detail-latin"><strong>Latin:</strong><br />${nl2br(escapeHtml(item.content_latin))}</p>`;
     }
     if (item.content_translation) {
-      html += `<p class="detail-translation"><strong>Terjemahan:</strong><br />${nl2br(escapeHtml(item.content_translation))}</p>`;
+      html += `<p class="detail-translation"><strong>Terjemahan:</strong><br />${nl2br(
+        escapeHtml(item.content_translation)
+      )}</p>`;
     }
     if (item.image_url) {
       html += `<img class="material-image" src="${escapeAttr(item.image_url)}" alt="Gambar materi" />`;
     }
     if (item.audio_url) {
-      html += `<audio controls src="${escapeAttr(item.audio_url)}"></audio>`;
+      html += '<section class="audio-player">';
+      html += '<p><strong>🎧 Pemutar Audio</strong></p>';
+      html += `<audio controls preload="none" src="${escapeAttr(item.audio_url)}"></audio>`;
+      html += '</section>';
     }
     html += '</section>';
 
     setMain(html);
   } catch (error) {
     showError(`Gagal memuat detail materi: ${error.message}`);
+  }
+}
+
+async function markMaterialAsCompleted(materialId, materialTitle, categoryId, categoryName) {
+  if (!materialId) {
+    showError('Material ID tidak valid.');
+    return;
+  }
+
+  if (!APP_STATE.username) {
+    showError('Isi dan simpan nama pengguna terlebih dahulu agar progres dapat disimpan.');
+    return;
+  }
+
+  showLoading('Menyimpan progres belajar...');
+
+  try {
+    const response = await apiSaveLearningProgress({
+      username: APP_STATE.username,
+      materialId: materialId,
+      materialTitle: materialTitle,
+      categoryId: categoryId,
+      categoryName: categoryName
+    });
+
+    if (!response.success) {
+      showError(response.message || 'Gagal menyimpan progres belajar.');
+      return;
+    }
+
+    await syncProgressForCurrentUser({ silent: true });
+    await loadMaterialDetail(materialId);
+  } catch (error) {
+    showError(`Gagal menyimpan progres: ${error.message}`);
   }
 }
 
@@ -306,7 +596,7 @@ async function loadDzikir(type) {
     const list = response.data || [];
     let html = '<section class="card">';
     html += '<h2>Zikir Pagi & Petang</h2>';
-    html += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">';
+    html += '<div class="form-row">';
     html += '<button type="button" class="btn" data-action="open-zikir" data-type="">Semua</button>';
     html += '<button type="button" class="btn" data-action="open-zikir" data-type="pagi">Pagi</button>';
     html += '<button type="button" class="btn" data-action="open-zikir" data-type="petang">Petang</button>';
@@ -345,7 +635,8 @@ async function loadQuranSurahs() {
     }
 
     const list = response.data || [];
-    let html = '<section class="card"><h2>Daftar Surat Al-Quran</h2><p class="muted">Klik surat untuk melihat ayat.</p></section>';
+    let html =
+      '<section class="card"><h2>Daftar Surat Al-Quran</h2><p class="muted">Klik surat untuk melihat ayat.</p></section>';
 
     if (!list.length) {
       html += '<div class="card empty">Belum ada data surat aktif.</div>';
@@ -357,7 +648,9 @@ async function loadQuranSurahs() {
         html += `<p class="muted">${escapeHtml(surah.surah_name_indonesia || '-')}</p>`;
         html += `<span class="meta">Ayat: ${escapeHtml(String(surah.total_verses || '-'))}</span>`;
         html += `<span class="meta">Wahyu: ${escapeHtml(surah.revelation_type || '-')}</span>`;
-        html += `<button type="button" class="btn btn-primary" data-action="open-surah" data-surah-id="${escapeAttr(String(surah.surah_id || ''))}" data-surah-name="${escapeAttr(String(surah.surah_name_latin || ''))}">Lihat Ayat</button>`;
+        html += `<button type="button" class="btn btn-primary" data-action="open-surah" data-surah-id="${escapeAttr(
+          String(surah.surah_id || '')
+        )}" data-surah-name="${escapeAttr(String(surah.surah_name_latin || ''))}">Lihat Ayat</button>`;
         html += '</article>';
       });
       html += '</section>';
@@ -406,6 +699,37 @@ async function loadQuranVerses(surahId, surahName) {
   } catch (error) {
     showError(`Gagal memuat ayat: ${error.message}`);
   }
+}
+
+function isMaterialCompleted(materialId) {
+  return Boolean(APP_STATE.completedMaterialMap[String(materialId || '')]);
+}
+
+function getMaterialCompleteBadge(materialId) {
+  if (!isMaterialCompleted(materialId)) {
+    return '';
+  }
+  return '<span class="meta completed-meta">Selesai ✅</span>';
+}
+
+function getCategoryNameById(categoryId) {
+  const targetId = String(categoryId || '');
+  const found = APP_STATE.categories.find((item) => String(item.category_id || '') === targetId);
+  return found ? String(found.category_name || '') : '';
+}
+
+function pickCategoryEmoji(name) {
+  const normalized = String(name || '').toLowerCase();
+  if (normalized.indexOf('iqro') !== -1) return '📘';
+  if (normalized.indexOf('huruf') !== -1) return '🔤';
+  if (normalized.indexOf('doa') !== -1) return '🤲';
+  if (normalized.indexOf('quran') !== -1) return '🕌';
+  if (normalized.indexOf('zikir') !== -1) return '🌙';
+  return '⭐';
+}
+
+function loadStoredUsername() {
+  return String(localStorage.getItem(STORAGE_KEYS.USERNAME) || '').trim();
 }
 
 function escapeHtml(value) {
