@@ -11,7 +11,9 @@ const APP_STATE = {
   dzikirType: '',
   username: '',
   completedMaterialMap: {},
-  progressItems: []
+  progressItems: [],
+  profileSaving: false,
+  profileFeedback: null
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,6 +36,15 @@ function bindEvents() {
     const target = event.target.closest('[data-action]');
     if (!target) return;
     handleAction(target);
+  });
+
+  appMain.addEventListener('keydown', (event) => {
+    const target = event.target;
+    if (!target || target.id !== 'usernameInput') return;
+    if (event.key !== 'Enter') return;
+
+    event.preventDefault();
+    saveUsernameProfile();
   });
 }
 
@@ -276,8 +287,15 @@ function renderHome() {
   html += '<p class="muted">Simpan nama belajar agar progres anak tetap tercatat dan mudah dilanjutkan.</p>';
   html += '<div class="form-row">';
   html += `<input id="usernameInput" class="field-control" type="text" placeholder="Contoh: Aisyah" value="${escapeAttr(APP_STATE.username || '')}" />`;
-  html += '<button type="button" class="btn btn-primary" data-action="save-username">Simpan Nama Belajar</button>';
+  html += `<button type="button" class="btn btn-primary" data-action="save-username" ${
+    APP_STATE.profileSaving ? 'disabled aria-busy="true"' : ''
+  }>${APP_STATE.profileSaving ? 'Menyimpan...' : 'Simpan Nama Belajar'}</button>`;
   html += '</div>';
+  if (APP_STATE.profileFeedback && APP_STATE.profileFeedback.message) {
+    html += `<p class="profile-feedback profile-feedback--${escapeAttr(APP_STATE.profileFeedback.type || 'info')}">${escapeHtml(
+      APP_STATE.profileFeedback.message
+    )}</p>`;
+  }
   html += '</section>';
 
   html += '<section class="card search-card">';
@@ -339,19 +357,60 @@ function renderHome() {
 }
 
 async function saveUsernameProfile() {
+  if (APP_STATE.profileSaving) return;
+
   const input = document.getElementById('usernameInput');
-  const username = String((input && input.value) || '').trim();
+  const username = normalizeUsernameInput((input && input.value) || '');
 
   if (!username) {
-    showError('Nama pengguna belum diisi. Isi dulu agar progres bisa disimpan.');
+    setProfileFeedback('error', 'Nama pengguna belum diisi. Isi dulu agar progres bisa disimpan.');
+    if (input) input.focus();
     return;
   }
 
-  APP_STATE.username = username;
-  localStorage.setItem(STORAGE_KEYS.USERNAME, username);
+  if (username.length < 2) {
+    setProfileFeedback('error', 'Nama minimal 2 karakter agar mudah dikenali saat belajar.');
+    if (input) input.focus();
+    return;
+  }
 
-  await syncProgressForCurrentUser({ silent: true });
-  renderHome();
+  setProfileSaving(true);
+  setProfileFeedback('info', 'Menyimpan nama belajar...');
+
+  APP_STATE.username = username;
+
+  try {
+    const storedIn = writeStorageValue(STORAGE_KEYS.USERNAME, username);
+    if (!storedIn) {
+      setProfileFeedback(
+        'error',
+        'Nama belum bisa disimpan di browser ini. Izinkan penyimpanan lokal (storage) lalu coba lagi.'
+      );
+      return;
+    }
+
+    const syncSuccess = await resolveSyncProgressWithTimeout(4000);
+    if (syncSuccess) {
+      setProfileFeedback(
+        'success',
+        storedIn === 'local'
+          ? 'Nama belajar berhasil disimpan. Progres siap dipantau.'
+          : 'Nama tersimpan untuk sesi ini. Progres siap dipantau selama browser tetap terbuka.'
+      );
+    } else {
+      setProfileFeedback(
+        'warning',
+        storedIn === 'local'
+          ? 'Nama berhasil disimpan, tetapi sinkron progres sedang lambat. Silakan lanjut belajar, sinkron akan dicoba lagi.'
+          : 'Nama tersimpan untuk sesi ini. Sinkron progres sedang lambat, coba lagi sebentar.'
+      );
+    }
+  } catch (_error) {
+    setProfileFeedback('error', 'Terjadi kendala saat menyimpan nama. Silakan coba lagi.');
+  } finally {
+    setProfileSaving(false);
+    renderHome();
+  }
 }
 
 async function syncProgressForCurrentUser(options) {
@@ -361,7 +420,7 @@ async function syncProgressForCurrentUser(options) {
   if (!username) {
     APP_STATE.completedMaterialMap = {};
     APP_STATE.progressItems = [];
-    return;
+    return true;
   }
 
   try {
@@ -370,7 +429,7 @@ async function syncProgressForCurrentUser(options) {
       if (!silent) {
         showError(response.message || 'Gagal mengambil progres belajar.');
       }
-      return;
+      return false;
     }
 
     const payload = response.data || {};
@@ -383,10 +442,12 @@ async function syncProgressForCurrentUser(options) {
 
     APP_STATE.completedMaterialMap = map;
     APP_STATE.progressItems = Array.isArray(payload.items) ? payload.items : [];
+    return true;
   } catch (error) {
     if (!silent) {
       showError(`Gagal sinkron progres: ${error.message}`);
     }
+    return false;
   }
 }
 
@@ -785,7 +846,86 @@ function pickCategoryEmoji(name) {
 }
 
 function loadStoredUsername() {
-  return String(localStorage.getItem(STORAGE_KEYS.USERNAME) || '').trim();
+  return String(readStorageValue(STORAGE_KEYS.USERNAME) || '').trim();
+}
+
+function normalizeUsernameInput(value) {
+  return String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function setProfileSaving(isSaving) {
+  APP_STATE.profileSaving = Boolean(isSaving);
+
+  const saveButton = document.querySelector('[data-action="save-username"]');
+  if (!saveButton) return;
+
+  saveButton.disabled = APP_STATE.profileSaving;
+  saveButton.setAttribute('aria-busy', APP_STATE.profileSaving ? 'true' : 'false');
+  saveButton.textContent = APP_STATE.profileSaving ? 'Menyimpan...' : 'Simpan Nama Belajar';
+}
+
+function setProfileFeedback(type, message) {
+  APP_STATE.profileFeedback = {
+    type: String(type || 'info'),
+    message: String(message || '')
+  };
+
+  const feedbackEl = document.querySelector('.profile-feedback');
+  if (!feedbackEl) return;
+
+  feedbackEl.className = `profile-feedback profile-feedback--${escapeAttr(APP_STATE.profileFeedback.type)}`;
+  feedbackEl.textContent = APP_STATE.profileFeedback.message;
+}
+
+function readStorageValue(key) {
+  try {
+    const localValue = localStorage.getItem(key);
+    if (localValue) return localValue;
+  } catch (_error) {
+    // Ignore and fallback to session storage
+  }
+
+  try {
+    return sessionStorage.getItem(key);
+  } catch (_error) {
+    return '';
+  }
+}
+
+function writeStorageValue(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return 'local';
+  } catch (_error) {
+    // Ignore and fallback to session storage
+  }
+
+  try {
+    sessionStorage.setItem(key, value);
+    return 'session';
+  } catch (_error) {
+    return '';
+  }
+}
+
+async function resolveSyncProgressWithTimeout(timeoutMs) {
+  const waitTimeout = Number(timeoutMs) > 0 ? Number(timeoutMs) : 4000;
+
+  let timeoutId = null;
+  const timeoutPromise = new Promise((resolve) => {
+    timeoutId = setTimeout(() => resolve(false), waitTimeout);
+  });
+
+  try {
+    const syncResult = await Promise.race([syncProgressForCurrentUser({ silent: true }), timeoutPromise]);
+    return syncResult === true;
+  } catch (_error) {
+    return false;
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 }
 
 function escapeHtml(value) {

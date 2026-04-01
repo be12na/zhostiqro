@@ -278,6 +278,39 @@ body {
   margin-top: 10px;
 }
 
+.profile-feedback {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.profile-feedback--info {
+  color: #215f46;
+  background: #eaf8f1;
+  border-color: #cce9db;
+}
+
+.profile-feedback--success {
+  color: #1d734f;
+  background: #e9fbef;
+  border-color: #bce8cc;
+}
+
+.profile-feedback--warning {
+  color: #815f00;
+  background: #fff6d9;
+  border-color: #f4df96;
+}
+
+.profile-feedback--error {
+  color: #8d2f2f;
+  background: #ffecec;
+  border-color: #f8c6c6;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
